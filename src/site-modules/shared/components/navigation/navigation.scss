@@ -51,20 +51,46 @@
   height: 63px;
   width: 63px;
   top: 20px;
+  cursor: pointer;
 }
 
 .navigation_button__search {
-  left: 590px;
-}
-
-.navigation_button__my-location {
   left: 683px;
 }
 
-.navigation_location-search {
-  height: 63px;
+.navigation_button__my-location {
+  left: 590px;
 }
 
-.navigation_location-search__opened {
+.navigation_location-search.form-control {
+  position: absolute;
+  border: none;
+  height: 100%;
+  width: 0;
+  transition: width 0.5s, left 0.5s;
+  padding: 0;
+  left: 50px;
+}
 
+.navigation_location-search__opened.navigation_location-search.form-control {
+  outline: 0 none;
+  box-shadow: none;
+  border: none;
+  left: 50px;
+  width: 280px;
+  padding-right: 40px;
+}
+
+.icon.navigation_location-cross-icon {
+  position: absolute;
+  cursor: pointer;
+  left: 287px;
+  width: 30px;
+  opacity: 0;
+}
+
+.icon.navigation_location-cross-icon__opened {
+  left: 270px;
+  opacity: 1;
+  transition-delay: 0.5s;
 }

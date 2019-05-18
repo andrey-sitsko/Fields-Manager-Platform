@@ -1,9 +1,21 @@
-let setLocationCallback;
+import { OpenStreetMapProvider } from 'leaflet-geosearch'
 
-export function registerMapLocationCallback(callback) {
-  setLocationCallback = callback;
+const provider = new OpenStreetMapProvider();
+let map;
+
+export function setLocation(lat, long) {
+  if (lat && long) {
+    map.setView([lat, long], 18)
+  }
 }
 
-export function setMapLocation(lat, long) {
-  setLocationCallback(lat, long)
+export async function searchAddress(addr) {
+  const result = await provider.search({ query: addr });
+  if(result.length) {
+    setLocation(result[0].y, result[0].x)
+  }
+}
+
+export function registerMap(_map) {
+  map = _map;
 }

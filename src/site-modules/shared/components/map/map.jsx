@@ -2,17 +2,9 @@ import React, { Component, Fragment } from 'react'
 import './map.scss';
 import 'leaflet'
 import 'leaflet-selectareafeature';
-import { OpenStreetMapProvider } from 'leaflet-geosearch';
-import { registerMapLocationCallback } from '../../utils/map-service'
+import { registerMap } from '../../utils/map-service'
 
-const provider = new OpenStreetMapProvider();
 let map;
-
-function setLocation (lat, long) {
-  if (lat && long) {
-    map.setView([lat, long], 18)
-  }
-}
 
 export class Map extends Component {
   constructor (props) {
@@ -30,7 +22,7 @@ export class Map extends Component {
 
     googleSat.addTo(map)
 
-    registerMapLocationCallback(setLocation)
+    registerMap(map)
   }
 
   getSelection() {
@@ -46,19 +38,9 @@ export class Map extends Component {
     })
   }
 
-  async searchAdreess({target: {value: addr}}) {
-    const result = await provider.search({ query: addr });
-    if(result.length) {
-      map.setView([result[0].y, result[0].x], 17)
-    }
-  }
-
   render() {
     return (
-      <Fragment>
-        <div id="backgroundMap" className="background-map h-100 w-100" ref={this.mapRef} />
-        <input type="text" onChange={this.searchAdreess} />
-      </Fragment>
+      <div id="backgroundMap" className="background-map h-100 w-100" ref={this.mapRef} />
     )
   }
 }
