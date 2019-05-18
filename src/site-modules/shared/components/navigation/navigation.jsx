@@ -32,7 +32,6 @@ const menuItems = [
     label: 'Settings',
     href: '/settings',
     iconClass: 'icon-settings',
-    isPrimary: true,
   },
   {
     label: 'History Book',
