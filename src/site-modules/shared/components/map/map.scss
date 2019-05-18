@@ -1,0 +1,12 @@
+.background-map {
+  z-index: 99;
+}
+
+.leaflet-control-attribution.leaflet-control {
+  display: none;
+}
+
+.leaflet-top.leaflet-left {
+  top: calc(100% - 90px);
+  left: calc(100% - 60px);
+}

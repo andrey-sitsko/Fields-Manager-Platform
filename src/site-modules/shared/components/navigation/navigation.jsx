@@ -65,7 +65,7 @@ export class Navigation extends Component {
     const { isBurgerOpen } = this.state;
 
     return (
-      <div className="navigation position-fixed w-100 h-100">
+      <div className="navigation position-fixed">
         <div className="nav-overlay" />
         <Row tag="nav" className="nav-container round bg-white align-items-center">
           <Col tag={Button} className="burger-btn p-4 text-black border-0" color="link" onClick={this.toggleBurger}>

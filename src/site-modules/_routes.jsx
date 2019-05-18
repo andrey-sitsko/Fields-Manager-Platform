@@ -14,9 +14,6 @@ export default function AppRoute() {
   return (
     <Fragment>
       <Switch>
-        <Route path="/" component={Navigation} />
-      </Switch>
-      <Switch>
       <Route path="/" exact component={Home} />
       <Route path="/add-field" exact component={AddField} />
       <Route path="/field-details/:id" exact component={FieldDetails} />
@@ -26,6 +23,9 @@ export default function AppRoute() {
       <Route path="/statistics" exact component={Statistics} />
       <Route path="/settings" exact component={Settings} />
     </Switch>
+      <Switch>
+        <Route path="/" component={Navigation} />
+      </Switch>
     </Fragment>
   );
 }

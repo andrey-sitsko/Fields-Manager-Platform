@@ -8,6 +8,11 @@ body {
   line-height: 21px;
 }
 
+html, #root, body {
+  width: 100%;
+  height: 100%;
+}
+
 a {
   color: #414141;
 

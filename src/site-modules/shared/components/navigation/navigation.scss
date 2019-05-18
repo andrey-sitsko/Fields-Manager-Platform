@@ -1,11 +1,14 @@
 .navigation {
+  z-index: 100;
+
   .nav-overlay {
+    pointer-events: none;
     height: 170px;
     background: linear-gradient(180deg, #EEEEEE 0%, rgba(0,0,0,0.3) 0.71%, rgba(0,0,0,0.3) 60.64%, rgba(255,255,255,0) 100%);
   }
 
   .burger-menu {
-    position: absolute;
+    position: fixed;
     top: 87px;
     left: 36px;
     width: 200px;
