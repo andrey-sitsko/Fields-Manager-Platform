@@ -14,7 +14,6 @@ module.exports.match = async (event) => {
     statusCode: 200,
     body: JSON.stringify({
       message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
     }, null, 2),
   };
 };
@@ -23,7 +22,7 @@ module.exports.fieldCreate = async (event) => {
   console.log(event.body);
 
   try {
-    const data = JSON.parse(evt.body || '{}');
+    const data = JSON.parse(event.body || '{}');
     const id = crypto.randomBytes(16).toString("hex");
 
     return {
