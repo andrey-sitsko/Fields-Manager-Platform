@@ -1,0 +1,57 @@
+.icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.icon-user {
+  background-image: url('assets/Oval.svg')
+}
+
+.icon-cross {
+  height: 14px;
+  width: 18px;
+  background-image: url('assets/ic_clear.svg');
+}
+
+.icon-burger {
+  height: 14px;
+  width: 18px;
+  background-image: url('assets/ic_menu.svg');
+}
+
+.icon-plant {
+  height: 30px;
+  width: 30px;
+  background-image: url('assets/plant.svg');
+}
+
+.icon-scroll {
+  height: 30px;
+  width: 30px;
+  background-image: url('assets/scroll.svg');
+}
+
+.icon-settings {
+  height: 30px;
+  width: 30px;
+  background-image: url('assets/settings.svg');
+}
+
+.icon-stats {
+  height: 30px;
+  width: 30px;
+  background-image: url('assets/stats.svg');
+}
+
+.icon-tractor {
+  height: 30px;
+  width: 30px;
+  background-image: url('assets/tractor.svg');
+}
+
+.icon-farmer {
+  height: 30px;
+  width: 30px;
+  background-image: url('assets/farmer.svg');
+}
