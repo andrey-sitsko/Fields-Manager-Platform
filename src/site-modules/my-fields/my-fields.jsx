@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Row from 'reactstrap/lib/Row';
 import { Card } from '../shared/components/card/card';
 import { NoFields } from './components/no-fields/no-fields';
+import { FieldsList } from './components/fields-list/fields-list';
 
 const MOCK_FIELDS = [
   { src: 'https://s3.amazonaws.com/epam-jam1/images/DJI_0098.JPG', name: 'Rape' },
@@ -27,14 +27,7 @@ export class MyFields extends Component {
     return (
       <Card hasCloseBtn>
         {fields && fields.length ?  
-          <div className="pl-3 mb-3">
-            <div className="help-icons">
-              <i className="icon icon-search2 mr-2"/>
-              <i className="icon icon-filter"/>
-            </div>
-            <Row>
-            </Row>
-          </div> 
+          <FieldsList fields={fields} />
         : <NoFields />
         }
       </Card>
