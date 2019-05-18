@@ -1,0 +1,23 @@
+service: fields # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  coords-upload:
+    handler: handler.coordsUpload
+    events:
+      - http:
+          path: coords/upload
+          method: post
+          cors: true
+
+  match:
+    handler: handler.match
+    events:
+      - s3:
+        bucket: epam-jam
+        event: s3:ObjectCreated:*
+        rules:
+            - prefix: fields/
