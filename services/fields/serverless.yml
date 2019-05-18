@@ -40,3 +40,4 @@ functions:
           event: s3:ObjectCreated:*
           rules:
               - prefix: fields/
+              - suffix: meta.json

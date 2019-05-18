@@ -122,9 +122,47 @@ module.exports.match = async (event) => {
     
     if (!matchedCoords) return { statusCode: 200 }
 
-    const imageUrl = `https://s3.amazonaws.com/${bucketName}/images/${matchedCoords.name}`;
+    const imageUrl = `https://s3.amazonaws.com/${bucketName}/${matchedCoords.name}`;
 
     console.log(imageUrl);
+
+    // call recognize api
+    const prediction = {
+      "id": objectName.replace('fields/', '').replace('/meta.json', ''),
+      "class_areas": {
+        "bush": 2021.8091862405313, 
+        "field": 15103.386228094381, 
+        "field_shadowed": 108.63382305087225, 
+        "road": 1154.8502744198556, 
+        "trees": 2728.046351214885
+      }, 
+      "class_percentages": {
+        "bush": 0.09574444444444444, 
+        "field": 0.7152333333333334, 
+        "field_shadowed": 0.0051444444444444445, 
+        "road": 0.05468888888888889, 
+        "trees": 0.12918888888888888
+      }, 
+      "lat": 53.923339416666664, 
+      "lng": 27.68277516666667,
+      "terrain_size": {
+        "mpp_x": 0.0423048523206751, 
+        "mpp_y": 0.055461790904828875, 
+        "terrain_size_x": 169.2194092827004, 
+        "terrain_size_y": 124.78902953586497
+      },
+      source: imageUrl.replace('json', 'JPG')
+    };
+
+    prediction.dmz = 1 - prediction.class_percentages.field - prediction.class_percentages.road;
+
+    await s3Upload({
+      Bucket: 'epam-jam1',
+      Key: objectName.replace('meta', 'prediction'),
+      ACL: 'public-read',
+      Body: JSON.stringify(prediction),
+      ContentType: 'application/json',
+    });
 
     // const res = await Promise.all(images.map(img => s3Client.selectObjectContent({
     //   Bucket: bucketName,
@@ -214,14 +252,15 @@ module.exports.fields = async (event) => {
     const data = JSON.parse(event.body || '{}');
     const id = crypto.randomBytes(16).toString("hex");
     const fileList = await allBucketKeys(s3Client, 'epam-jam1');
-    const images = fileList.filter(file => file.search('images') !== -1 && file.search('.json') === -1)
+    const predictions = fileList.filter(file => file.search('field') !== -1 && file.search('prediction.json') !== -1)
+    const images = await Promise.all(predictions.map(img => s3Get({ Bucket: 'epam-jam1',  Key: img })));
     
     return {
       statusCode: 200,
       body: JSON.stringify({
         headers: { ...CORS },
         status: 'OK',
-        data: images.map(img => ({ source: `https://s3.amazonaws.com/epam-jam1/${img}` }))
+        data: images.map(img => JSON.parse(img.Body.toString()))
       }),
     };
 
