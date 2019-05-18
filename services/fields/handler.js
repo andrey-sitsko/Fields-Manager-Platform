@@ -36,26 +36,89 @@ const s3FieldParams = (fieldId, body) => ({
   ContentType: 'application/json',
 });
 
-module.exports.match = async (event) => {
-  const data = event.Records[0].s3;
-  const bucketName = data.bucket.name;
-  const objectName = data.object.key;
+function rad2degr(rad) { return rad * 180 / Math.PI; }
+function degr2rad(degr) { return degr * Math.PI / 180; }
 
-  const fieldCoordsParams = {
-    Bucket: bucketName, 
-    Key: objectName,
+function getCenters(coords) {
+  let sumX = 0;
+  let sumY = 0;
+  let sumZ = 0;
+  for (let i = 0; i< coords.length; i++) {
+    let lat = degr2rad(coords[i]['lat']);
+    let lng = degr2rad(coords[i]['lng']);
+    sumX += Math.cos(lat) * Math.cos(lng);
+    sumY += Math.cos(lat) * Math.sin(lng);
+    sumZ += Math.sin(lat);
   }
 
-  const { Body } = await s3Get(fieldCoordsParams);
+  let avgX = sumX / coords.length;
+  let avgY = sumY / coords.length;
+  let avgZ = sumZ / coords.length;
 
-  const fieldCoords = JSON.parse(Body);
+  let lng = Math.atan2(avgY, avgX);
+  let hyp = Math.sqrt(avgX * avgX + avgY * avgY);
+  let lat = Math.atan2(avgZ, hyp);
 
-  console.log(fieldCoords);
+  return { lat: rad2degr(lat), lng: rad2degr(lng) };
+};
 
-
-  return {
-    statusCode: 200,
+async function allBucketKeys(s3, bucket) {
+  const params = {
+    Bucket: bucket,
   };
+
+  var keys = [];
+  for (;;) {
+    var data = await s3.listObjects(params).promise();
+
+    data.Contents.forEach((elem) => {
+      keys = keys.concat(elem.Key);
+    });
+
+    if (!data.IsTruncated) {
+      break;
+    }
+    params.Marker = data.NextMarker;
+  }
+
+  return keys;
+};
+
+module.exports.match = async (event) => {
+  try {
+    const data = event.Records[0].s3;
+    const bucketName = data.bucket.name;
+    const objectName = data.object.key;
+
+    console.log(bucketName);
+    console.log(objectName);
+
+    const fieldCoordsParams = {
+      Bucket: bucketName, 
+      Key: objectName,
+    };
+
+    const { Body } = await s3Get(fieldCoordsParams);
+
+    const fieldCoords = JSON.parse(Body);
+
+    const centers = getCenters(fieldCoords);
+
+    console.log(centers);
+
+    const fileList = await allBucketKeys(s3Client, 'epam-jam1');
+
+    console.log(fileList);
+
+    return {
+      statusCode: 200,
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      statusCode: 200,
+    };
+  }
 };
 
 module.exports.fieldCreate = async (event) => {
