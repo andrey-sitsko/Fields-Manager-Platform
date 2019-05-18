@@ -16,7 +16,7 @@ functions:
   match:
     handler: handler.match
     events:
-     - s3:
+      - s3:
         bucket: epam-jam
         event: s3:ObjectCreated:*
         rules:
