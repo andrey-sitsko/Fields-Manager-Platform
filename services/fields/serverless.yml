@@ -15,6 +15,7 @@ provider:
 functions:
   coords-upload:
     handler: handler.fieldCreate
+    timeout: 30
     events:
       - http:
           path: field
@@ -23,6 +24,7 @@ functions:
 
   match:
     handler: handler.match
+    timeout: 60
     events:
       - s3:
           bucket: epam-jam1
