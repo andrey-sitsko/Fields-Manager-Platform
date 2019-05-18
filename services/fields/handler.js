@@ -36,7 +36,7 @@ module.exports.fieldCreate = async (event) => {
     const data = JSON.parse(event.body || '{}');
     const id = crypto.randomBytes(16).toString("hex");
     await s3Upload(
-      s3FieldParams(id, {coords: {"long": 14.55666, "lat": 244.445 }})
+      s3FieldParams(id, data)
     );
 
     return {
