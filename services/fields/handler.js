@@ -16,7 +16,7 @@ const CORS = {
 };
 
 const s3FieldParams = (fieldId, body) => ({
-  Bucket: 'epam-jam',
+  Bucket: 'epam-jam1',
   Key: `fields/${fieldId}/coords.json`,
   ACL: 'public-read',
   Body: JSON.stringify(body),
@@ -24,6 +24,8 @@ const s3FieldParams = (fieldId, body) => ({
 });
 
 module.exports.match = async (event) => {
+  console.log(event);
+
   return {
     statusCode: 200,
   };
