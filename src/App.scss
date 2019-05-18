@@ -27,12 +27,21 @@ a {
   line-height: 16px;
 }
 
+.small {
+  font-size: 10px;
+  line-height: 11px;
+}
+
 .text-black {
   color: #000;
 }
 
 .text-white {
   color: #fff;
+}
+
+.text-gray {
+  color: #bbb;
 }
 
 .bg-black {

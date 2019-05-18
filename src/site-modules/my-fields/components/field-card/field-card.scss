@@ -1,0 +1,15 @@
+.field-card {
+  padding: 0 10px;
+}
+
+.empty-field-card {
+  .add-link {
+    border: 1px solid black;
+  }
+}
+
+.add-link,
+.field-card-image {
+  width: 200px;
+  height: 110px;
+}

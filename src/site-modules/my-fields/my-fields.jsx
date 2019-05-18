@@ -13,7 +13,7 @@ export class MyFields extends Component {
     super(props);
 
     this.state = {
-      fields: [],
+      fields: MOCK_FIELDS,
     };
   }
 
