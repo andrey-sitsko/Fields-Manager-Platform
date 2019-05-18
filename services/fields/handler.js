@@ -17,20 +17,21 @@ const CORS = {
 
 const mock = {
   area: [
-    {
-      "lat": 51.520173035107824,
-      "lng": -0.08995056152343751
-    },
-    {
-      "lat": 51.520173035107824,
-      "lng": -0.09012222290039064
-    }
+    {"lat":53.92393936111111,"lng":27.693696},
+    // {
+    //   "lat": 51.520173035107824,
+    //   "lng": -0.08995056152343751
+    // },
+    // {
+    //   "lat": 51.520173035107824,
+    //   "lng": -0.09012222290039064
+    // }
   ]
 };
 
 const s3FieldParams = (fieldId, body) => ({
   Bucket: 'epam-jam1',
-  Key: `fields/${fieldId}/coords.json`,
+  Key: `fields/${fieldId}/meta.json`,
   ACL: 'public-read',
   Body: JSON.stringify(body),
   ContentType: 'application/json',
@@ -102,13 +103,65 @@ module.exports.match = async (event) => {
 
     const fieldCoords = JSON.parse(Body);
 
-    const centers = getCenters(fieldCoords);
+    const centers = getCenters(fieldCoords.coords);
 
     console.log(centers);
 
     const fileList = await allBucketKeys(s3Client, 'epam-jam1');
 
-    console.log(fileList);
+    const images = fileList.filter(file => file.search('images') !== -1 && file.search('.json') !== -1)
+    
+    const coordsData = await Promise.all(images.map(img => s3Get({ Bucket: bucketName,  Key: img })));
+
+    const imagesAndCoords = coordsData.map((img, i) => ({
+      coords: JSON.parse(img.Body.toString()),
+      name: images[i]
+    }));
+    
+    const matchedCoords = imagesAndCoords.find(s => s.coords.lat === centers.lat);
+    
+    if (!matchedCoords) return { statusCode: 200 }
+
+    const imageUrl = `https://s3.amazonaws.com/${bucketName}/images/${matchedCoords.name}`;
+
+    console.log(imageUrl);
+
+    // const res = await Promise.all(images.map(img => s3Client.selectObjectContent({
+    //   Bucket: bucketName,
+    //   Key: img,
+    //   ExpressionType: 'SQL',
+    //   Expression: `SELECT s.* FROM S3Object[*][*] s WHERE s.lat LIKE ${centers.lat} AND s.lng LIKE ${centers.lng}`,
+    //   InputSerialization: {
+    //     JSON: {
+    //       Type: 'DOCUMENT'
+    //     }
+    //   },
+    //   OutputSerialization: {
+    //     JSON: {
+    //       RecordDelimiter: '\n'
+    //     }
+    //   }
+    // })
+    // .promise()));
+
+    // const matchedFiles = await Promise.all(res.map(output => {
+    //   return new Promise((resolve) => {
+    //     output.Payload.on('data', event => {
+    //       console.log(event);
+
+    //       if (event.Records) {
+    //         // THIS IS OUR RESULT
+    //         console.log(event.Records);
+
+    //         let buffer = event.Records.Payload;
+
+    //         resolve(buffer.toString());
+    //       }
+    //     });
+    //   })
+    // }));
+
+    // console.log(matchedFiles);
 
     return {
       statusCode: 200,
@@ -128,7 +181,7 @@ module.exports.fieldCreate = async (event) => {
     const data = JSON.parse(event.body || '{}');
     const id = crypto.randomBytes(16).toString("hex");
     await s3Upload(
-      s3FieldParams(id, mock.area)
+      s3FieldParams(id, { name: 'field', coords: mock.area })
     );
 
     return {
@@ -149,7 +202,38 @@ module.exports.fieldCreate = async (event) => {
         headers: { ...CORS },
         status: 'ERROR',
         data: {
-          error: e
+          error: e.message || ''
+        }
+      }),
+    };
+  }
+};
+
+module.exports.fields = async (event) => {
+  try {
+    const data = JSON.parse(event.body || '{}');
+    const id = crypto.randomBytes(16).toString("hex");
+    const fileList = await allBucketKeys(s3Client, 'epam-jam1');
+    const images = fileList.filter(file => file.search('images') !== -1 && file.search('.json') === -1)
+    
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        headers: { ...CORS },
+        status: 'OK',
+        data: images.map(img => ({ source: `https://s3.amazonaws.com/epam-jam1/${img}` }))
+      }),
+    };
+
+  } catch (e) {
+    console.log(e);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        headers: { ...CORS },
+        status: 'ERROR',
+        data: {
+          error: e.message || ''
         }
       }),
     };

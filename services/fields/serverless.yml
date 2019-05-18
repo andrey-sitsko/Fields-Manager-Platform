@@ -13,6 +13,15 @@ provider:
            - - "arn:aws:s3:::*"
 
 functions:
+  fields:
+    handler: handler.fields
+    timeout: 30
+    events:
+      - http:
+          path: fields
+          method: get
+          cors: true
+
   coords-upload:
     handler: handler.fieldCreate
     timeout: 30
