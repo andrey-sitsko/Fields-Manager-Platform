@@ -3,9 +3,16 @@ import './map.scss';
 import 'leaflet'
 import 'leaflet-selectareafeature';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import { registerMapLocationCallback } from '../../utils/map-service'
 
 const provider = new OpenStreetMapProvider();
 let map;
+
+function setLocation (lat, long) {
+  if (lat && long) {
+    map.setView([lat, long], 18)
+  }
+}
 
 export class Map extends Component {
   constructor (props) {
@@ -22,8 +29,8 @@ export class Map extends Component {
     });
 
     googleSat.addTo(map)
-    // map.selectAreaFeature.enable({color: 'blue'});
-    // map.selectAreaFeature.options.color = 'black'
+
+    registerMapLocationCallback(setLocation)
   }
 
   getSelection() {

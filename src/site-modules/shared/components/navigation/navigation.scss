@@ -23,6 +23,7 @@
   }
 
   .nav-container {
+    height: 63px;
     position: fixed;
     top: 20px;
     left: 36px;
@@ -44,4 +45,26 @@
       border-radius: 50%;
     }
   }
+}
+
+.navigation_button {
+  height: 63px;
+  width: 63px;
+  top: 20px;
+}
+
+.navigation_button__search {
+  left: 590px;
+}
+
+.navigation_button__my-location {
+  left: 683px;
+}
+
+.navigation_location-search {
+  height: 63px;
+}
+
+.navigation_location-search__opened {
+
 }

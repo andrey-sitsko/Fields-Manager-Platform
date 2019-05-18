@@ -3,8 +3,9 @@ import classnames from 'classnames';
 import Button from 'reactstrap/lib/Button';
 import Row from 'reactstrap/lib/Row';
 import Col from 'reactstrap/lib/Col';
+import Input from 'reactstrap/lib/Input'
 import { NavLink } from 'react-router-dom';
-
+import {setMapLocation} from '../../utils/map-service'
 import './navigation.scss';
 
 const menuItems = [
@@ -61,8 +62,18 @@ export class Navigation extends Component {
     this.setState({ isBurgerOpen: false });
   }
 
+  navigateToCurrent() {
+    navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+      setMapLocation(latitude, longitude)
+    })
+  }
+
+  toggleLocationInput = () => {
+    this.setState({locationInputOpened: !this.state.locationInputOpened})
+  }
+
   render() {
-    const { isBurgerOpen } = this.state;
+    const { isBurgerOpen, locationInputOpened } = this.state;
 
     return (
       <div className="navigation position-fixed">
@@ -80,6 +91,16 @@ export class Navigation extends Component {
           }
           <div className="user-photo icon-user mx-3" />
         </Row>
+
+        <div className="navigation_button navigation_button__search bg-white round position-fixed d-flex align-items-center justify-content-center"
+          onClick={this.toggleLocationInput}>
+          <span className="icon icon-search" />
+          <Input className={classnames('navigation_location-search' ,{"navigation_location-search__opened": locationInputOpened})} type="text"/>
+        </div>
+        <div className="navigation_button navigation_button__my-location bg-white round position-fixed d-flex align-items-center justify-content-center"
+           onClick={this.navigateToCurrent}>
+          <span className="icon icon-my-location" />
+        </div>
 
         {isBurgerOpen && 
           <Row tag="nav" className="flex-column burger-menu round bg-white">
