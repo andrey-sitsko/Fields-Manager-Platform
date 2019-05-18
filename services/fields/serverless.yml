@@ -6,10 +6,10 @@ provider:
 
 functions:
   coords-upload:
-    handler: handler.coordsUpload
+    handler: handler.fieldCreate
     events:
       - http:
-          path: coords/upload
+          path: field
           method: post
           cors: true
 
