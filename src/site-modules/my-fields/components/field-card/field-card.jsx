@@ -9,7 +9,7 @@ export function FieldCard({ src, name }) {
     return (
       <Col className="empty-field-card">
         <div className="medium mb-1">Add new field</div>
-        <Link className="add-link round d-flex" to="/add-vehicle">
+        <Link className="add-link round d-flex" to="/add-field">
           <i class="icon icon-add m-auto d-block" />
         </Link>
       </Col>

@@ -1,0 +1,26 @@
+.add-field-card.content-card {
+  width: 220px;
+  padding: 10px;
+
+  .card-title {
+    margin-bottom: 15px;
+  }
+
+  .field-name-label {
+    margin-bottom: 5px;
+  }
+
+  .field-name-input {
+    margin-bottom: 20px;
+  }
+
+  .specify-text {
+    margin-bottom: 10px;
+  }
+
+  .add-btn {
+    &.disabled {
+      opacity: 0.1;
+    }
+  }
+}
