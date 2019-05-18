@@ -36,9 +36,9 @@ export class AddField extends Component {
         <Label for="field-name" className="field-name-label text-center medium">Field Name</Label> 
         <Input id="field-name" className="field-name-input round-half" innerRef={this.fieldNameRef} />
         <div className="specify-text text-center small">Specify border of field using your mouse</div>
-        <img className="w-100" />
+        <div className="preview round-half" />
         <Button
-          className={classnames('add-btn text-white bg-black round-half medium w-100', { disabled: this.state.isBtnDisabled })}
+          className={classnames('add-btn round-half medium w-100 border-0', { 'disabled text-gray': this.state.isBtnDisabled, 'bg-black text-white': !this.state.isBtnDisabled })}
           onClick={this.createField}
           disabled={this.state.isBtnDisabled}
         >

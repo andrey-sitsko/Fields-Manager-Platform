@@ -20,7 +20,15 @@
 
   .add-btn {
     &.disabled {
-      opacity: 0.1;
+      background-color: rgba(0, 0, 0, 0.1);
     }
+  }
+
+  .preview {
+    height: 175px;
+    width: 200px;
+    background-size: contain;
+    background: url('../../assets/craft_version5.gif');
+    margin-bottom: 20px;
   }
 }
