@@ -158,10 +158,27 @@ module.exports.match = async (event) => {
     const isMatch = (coords, centers) => {
       return Math.abs(centers.lat - coords.lat) + Math.abs(centers.lng - coords.lng) < 0.01
     }
+
+    // const isMatchRemote = async (photos, shapes) => {
+    //   const res = await httpPost(
+    //     '34.201.39.171',
+    //     5000,
+    //     '/api/v1.0/match_photos_with_field',
+    //     {shapes, photos}
+    //   );
+
+    //   return res;
+    //   // return Math.abs(centers.lat - coords.lat) + Math.abs(centers.lng - coords.lng) < 0.01
+    // }
     
     const matchedCoords = imagesAndCoords.find(s => isMatch(s.coords, centers));
+
+    console.log(matchedCoords);
+    // const imgCoors = imagesAndCoords.map(d => d.coords);
+
+    // const predCoords = await isMatchRemote(imgCoors, fieldCoords.coords);
     
-    console.log('Matched', matchedCoords);
+    // console.log('Matched', predCoords);
 
     if (!matchedCoords) {
         const prediction = {
@@ -186,6 +203,8 @@ module.exports.match = async (event) => {
     const imageUrl = `https://s3.amazonaws.com/${bucketName}/${matchedCoords.name}`.replace('.json', '.JPG');
 
     console.log(imageUrl);
+
+    ph.src = imageUrl;
 
     // http://34.201.39.171:5000/api/v1.0/process_image_from_url?task_name=detect_artifacts&with_original'
 
@@ -230,7 +249,7 @@ module.exports.match = async (event) => {
   } catch (e) {
     console.log(e);
     return {
-      statusCode: 200,
+      statusCode: 500,
     };
   }
 };
@@ -240,6 +259,15 @@ module.exports.fieldCreate = async (event) => {
 
   try {
     const data = JSON.parse(event.body || '{}');
+
+    if (!data.name) {
+      throw new Error('missed keys name and fieldShape');
+    }
+
+    if (!Array.isArray(data.fieldShape)) {
+      throw new Error('missed keys name and fieldShape');
+    }
+
     const id = crypto.randomBytes(16).toString("hex");
     await s3Upload(
       s3FieldParams(id, { name: data.name, coords: data.fieldShape })
@@ -278,7 +306,32 @@ module.exports.fieldDetails = async (event) => {
     const fileList = await allBucketKeys(s3Client, 'epam-jam1');
 
     const fieldKey = fileList.find(file => file.search('fields') !== -1 && file.search(`${id}`) !== -1 && file.search('prediction.json') !== -1)
+    
     console.log(fieldKey);
+
+    if (fieldKey === undefined) {
+      const metaKey = fileList.find(file => file.search('fields') !== -1 && file.search(`${id}`) !== -1 && file.search('meta.json') !== -1)
+      
+      console.log(metaKey);
+
+      if (!metaKey) {
+        throw new Error('I cant find field');
+      }
+      
+      const metaData = await s3Get({ Bucket: 'epam-jam1',  Key: metaKey });
+      
+      const meta = JSON.parse(metaData.Body.toString());
+
+      return {
+        statusCode: 200,
+        headers: { ...CORS },
+        body: JSON.stringify({
+          status: 'OK',
+          data: { name: meta.name, id, fieldShape: meta.coords }
+        })
+      };
+    }
+
     const data = await s3Get({ Bucket: 'epam-jam1',  Key: fieldKey });
 
     return {
@@ -307,7 +360,6 @@ module.exports.fieldDetails = async (event) => {
 module.exports.fields = async (event) => {
   try {
     const data = JSON.parse(event.body || '{}');
-    const id = crypto.randomBytes(16).toString("hex");
     const fileList = await allBucketKeys(s3Client, 'epam-jam1');
     const predictions = fileList.filter(file => file.search('field') !== -1 && file.search('prediction.json') !== -1)
     const images = await Promise.all(predictions.map(img => s3Get({ Bucket: 'epam-jam1',  Key: img })));
