@@ -1,0 +1,32 @@
+.my-resources-card {
+  padding-top: 30px;
+
+  .resource-link {
+    padding-right: 20px;
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+
+  .image {
+    width: 200px;
+    height: 110px;
+  }
+
+  .weather-stations {
+    background: url('../../assets/weather-stations.png');
+  }
+  .agrotechnical-resources {
+    background: url('../../assets/agrotechnical-resources.png');
+  }
+  .aerial-survey {
+    background: url('../../assets/aerial-survey.png');
+  }
+  .fertilizers {
+    background: url('../../assets/fertilizers.png');
+  }
+  .human-resources {
+    background: url('../../assets/human-resources.png');
+  }
+}
