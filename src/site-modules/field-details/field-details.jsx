@@ -124,7 +124,7 @@ export class FieldDetails extends Component {
               <div>{suspiciousZone}%</div>
             </div>
             <div className="font-weight-bold d-inline-block text-black large mb-15">Weather</div>
-            <i className={classnames('icon float-right icon-weather-fallback', {
+            <i className={classnames('icon float-right', {
               'icon-cleat-sky': this.state.weatherDescription === 'clear sky',
               'icon-few-clouds': this.state.weatherDescription === 'few clouds',
               'icon-shattered-clouds': this.state.weatherDescription === 'scattered clouds',
@@ -133,7 +133,8 @@ export class FieldDetails extends Component {
               'icon-rain': this.state.weatherDescription === 'rain',
               'icon-snow': this.state.weatherDescription === 'snow',
               'icon-mist': this.state.weatherDescription === 'mist' || this.state.weatherDescription === 'haze',
-              'icon-thunderstorm': this.state.weatherDescription === 'thunderstorm'
+              'icon-thunderstorm': this.state.weatherDescription === 'thunderstorm',
+              'icon-weather-fallback': !!this.state.weatherDescription
             })} />
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Temperature</div>
