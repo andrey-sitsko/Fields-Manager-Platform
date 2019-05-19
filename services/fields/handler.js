@@ -203,7 +203,7 @@ module.exports.match = async (event) => {
     const imageUrl = `https://s3.amazonaws.com/${bucketName}/${matchedCoords.name}`.replace('.json', '.JPG');
 
     console.log(imageUrl);
-
+    ph.id = crypto.randomBytes(16).toString("hex");
     ph.src = imageUrl;
 
     // http://34.201.39.171:5000/api/v1.0/process_image_from_url?task_name=detect_artifacts&with_original'
