@@ -238,11 +238,14 @@ module.exports.match = async (event) => {
 
     const photos = await readImages(imageUrls);
 
+    const spZ = photos.reduce((acc, ph) => acc += ph.dmz, 0);
+
     // call recognize api
     const prediction = {
       "id": objectName.replace('fields/', '').replace('/meta.json', ''),
       "name": fieldCoords.name,
       "fieldShape": fieldCoords.coords,
+      "suspiciousZone": spZ / photos.length,
       "photos": photos
     };
 
