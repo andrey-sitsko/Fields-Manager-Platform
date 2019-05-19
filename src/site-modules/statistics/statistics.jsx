@@ -61,7 +61,7 @@ export class Statistics extends Component {
             </div>
           </Col>
           <Col xs={6} className="pl-25">
-            <div className="font-weight-bold large text-black mb-15">Trouble areas</div>
+            <div className="font-weight-bold large text-black mb-15">Trouble Areas</div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Not showing</div>
               <div>3%</div>
