@@ -7,8 +7,10 @@ import { Card } from '../shared/components/card/card';
 import { getMap, setLocation } from '../shared/utils/map-service'
 import axios from 'axios'
 import { SuspiciousZoneValue } from '../shared/components/suspicious-zone-value/suspicious-zone-value';
+import { withRouter } from 'react-router-dom';
 
 import './field-details.scss';
+import { AddFieldUI } from '../add-field/add-field'
 
 let mock = {
   "id": "2",
@@ -56,10 +58,66 @@ let mock = {
       "lat": 51.533774986527696,
       "lng": -0.12970735318958762
     }
+  ],
+  "photos": [
+    {
+      "id": "67aa8910056f4bfe8b8158557434c5bc",
+      "class_areas": {
+        "bush": 2021.8091862405313,
+        "field": 15103.386228094381,
+        "field_shadowed": 108.63382305087225,
+        "road": 1154.8502744198556,
+        "trees": 2728.046351214885
+      },
+      "class_percentages": {
+        "bush": 0.09574444444444444,
+        "field": 0.7152333333333334,
+        "field_shadowed": 0.0051444444444444445,
+        "road": 0.05468888888888889,
+        "trees": 0.12918888888888888
+      },
+      "lat": 51.531268672483534,
+      "lng": -0.07450103759765626,
+      "terrain_size": {
+        "mpp_x": 0.0423048523206751,
+        "mpp_y": 0.055461790904828875,
+        "terrain_size_x": 169.2194092827004,
+        "terrain_size_y": 124.78902953586497
+      },
+      "source": "https://s3.amazonaws.com/epam-jam1/images/DJI_0109.JPG",
+      "dmz": 0.23007777777777771
+    },
+    {
+      "id": "67aa8910056f4bfe8b8158557434c5bc",
+      "class_areas": {
+        "bush": 2021.8091862405313,
+        "field": 15103.386228094381,
+        "field_shadowed": 108.63382305087225,
+        "road": 1154.8502744198556,
+        "trees": 2728.046351214885
+      },
+      "class_percentages": {
+        "bush": 0.09574444444444444,
+        "field": 0.7152333333333334,
+        "field_shadowed": 0.0051444444444444445,
+        "road": 0.05468888888888889,
+        "trees": 0.12918888888888888
+      },
+      "lat": 51.533774986527696,
+      "lng": -0.12970735318958762,
+      "terrain_size": {
+        "mpp_x": 0.0423048523206751,
+        "mpp_y": 0.055461790904828875,
+        "terrain_size_x": 169.2194092827004,
+        "terrain_size_y": 124.78902953586497
+      },
+      "source": "https://s3.amazonaws.com/epam-jam1/images/DJI_0109.JPG",
+      "dmz": 0.23007777777777771
+    }
   ]
 }
 
-export class FieldDetails extends Component {
+export class FieldDetailsUI extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -77,8 +135,8 @@ export class FieldDetails extends Component {
   }
 
   componentDidMount() {
-    // ToDo add axios request
     setTimeout(async () => {
+      // ToDo add axios request
       this.setState({ data: mock })
       setLocation(mock.fieldShape[0].lat, mock.fieldShape[0].lng, 12)
 
@@ -97,11 +155,24 @@ export class FieldDetails extends Component {
         pressure: weather.main.pressure,
         weatherDescription: weather.weather[0].description
       })
+
+      const map = getMap();
+      this.photoMarkers = [];
+
+      for (let photo of mock.photos) {
+        const marker = window.L.marker({lng: photo.lng, lat: photo.lat});
+        this.photoMarkers.push(marker);
+        marker.on('click', () => {
+          this.props.history.push(`/photo-details/${photo.id}`)
+        })
+        marker.addTo(map)
+      }
     }, 0)
   }
 
   componentWillUnmount () {
     this.fieldLayer.remove();
+    this.photoMarkers.forEach((m) => m.remove())
   }
 
   render() {
@@ -190,3 +261,5 @@ export class FieldDetails extends Component {
     )
   }
 }
+
+export const FieldDetails = withRouter(FieldDetailsUI)
