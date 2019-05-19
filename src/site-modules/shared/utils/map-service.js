@@ -3,7 +3,7 @@ import { OpenStreetMapProvider } from 'leaflet-geosearch'
 const provider = new OpenStreetMapProvider();
 let map;
 
-export function setLocation(lat, long, zoom = 17) {
+export function setLocation(lat, long, zoom = 19) {
   if (lat && long) {
     map.setView([lat, long], zoom)
   }

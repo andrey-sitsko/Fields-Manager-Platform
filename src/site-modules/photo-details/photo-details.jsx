@@ -9,18 +9,7 @@ import { SuspiciousZoneValue } from '../shared/components/suspicious-zone-value/
 
 import './photo-details.scss';
 import { removeMapSelection } from '../shared/utils/map-service'
-
-const MOCK_PHOTO = {
-  id: 'p1',
-  fieldName: 'Wheat',
-  date: new Date('April 17, 2019 13:24:00'),
-  originalSrc: 'https://s3.amazonaws.com/epam-jam1/images/DJI_0098.JPG',
-  mask: [],
-  square: 5.6,
-  suspiciousZone: 59,
-  lat: 51.520173035107824,
-  lng: -0.08995056153243751,
-}
+import axios from 'axios';
 
 const TYPE_MAP = {
   ORIGINAL: 'Original',
@@ -47,10 +36,13 @@ export class PhotoDetails extends Component {
     };
   }
   
-  componentDidMount() {
+  async componentDidMount() {
     // fetch photo details
+    const {data: {data: fieldDetails}} = await axios.get(`https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/field/${this.props.match.params.fieldId}`)
+
     this.setState({
-      data: MOCK_PHOTO,
+      data: fieldDetails.photos.find((photo) => photo.id === this.props.match.params.photoId),
+      fieldName: fieldDetails.name
     });
   }
 
@@ -69,12 +61,17 @@ export class PhotoDetails extends Component {
       return null;
     }
 
-    const { fieldName, originalSrc, square, suspiciousZone, lat, lng } = this.state.data;
+    const { fieldName, src, mask, square, dmz, lat, lng } = this.state.data;
 
     return (
       <Card className="photo-details-card" hasBackBtn hasCloseBtn onCloseClick={this.onCLoseCLick}>
         <div className="text-center medium mb-10">{fieldName} (photo view)</div>
-        <img className="w-100 mb-10" src={originalSrc} alt="field" />
+        <div className="position-relative">
+          <img className="w-100 mb-10" src={src} alt="field" />
+          { photoType === TYPE_MAP.LABEL && <div className="mb-10 mask-image w-100" style={{background: `url('data:image/png;base64,${mask}')`}} />}
+        </div>
+
+
         <div className="d-flex justify-content-between align-items-center mb-20">
           <div className="medium">
             March, 2019 <i className="ml-1 icon icon-date"/>
@@ -110,7 +107,7 @@ export class PhotoDetails extends Component {
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Suspicious zone</div>
-              <SuspiciousZoneValue percents={suspiciousZone} />
+              <SuspiciousZoneValue percents={dmz * 100 | 0} />
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">

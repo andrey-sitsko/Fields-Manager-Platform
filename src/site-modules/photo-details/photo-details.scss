@@ -63,3 +63,11 @@
     }
   }  
 }
+
+.mask-image {
+  position: absolute;
+  opacity: 0.4;
+  top: 0;
+  bottom: 0;
+  background-size: 760px 430px !important;
+}

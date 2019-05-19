@@ -139,7 +139,7 @@ export class FieldDetailsUI extends Component {
       // ToDo add axios request
       const {data: {data: fieldDetails}} = await axios.get(`https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/field/${this.props.match.params.fieldId}`)
       this.setState({ data: fieldDetails })
-      setLocation(fieldDetails.fieldShape[0].lat, fieldDetails.fieldShape[0].lng, 12)
+      setLocation(fieldDetails.fieldShape[0].lat, fieldDetails.fieldShape[0].lng, 17)
 
       this.fieldLayer = new window.L.FeatureGroup();
 
@@ -159,8 +159,8 @@ export class FieldDetailsUI extends Component {
 
       const map = getMap();
 
-      if(this.fieldLayer.photos) {
-        for (let photo of this.fieldLayer.photos) {
+      if(fieldDetails.photos) {
+        for (let photo of fieldDetails.photos) {
           const marker = window.L.marker([photo.lat, photo.lng],{
             icon: window.L.icon({
               iconUrl: photo.dmz * 100 > 20 ? '/oval-red.svg' : '/oval-blue.svg'
@@ -187,7 +187,7 @@ export class FieldDetailsUI extends Component {
       return null;
     }
 
-    const { name, square, suspiciousZone } = this.state.data;
+    const { name, square, suspiciousZone = 0} = this.state.data;
 
     return (
       <Card className="field-details-card" hasBackBtn hasCloseBtn onCloseClick={this.onCLoseButtonCLick}>
@@ -205,11 +205,12 @@ export class FieldDetailsUI extends Component {
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Square</div>
-              {!!square && <div>{square}ha</div>}
+              <div>0.7ha</div>
+              {/*{!!square && <div>{square}ha</div>}*/}
             </div>
             <div className="d-flex justify-content-between medium mb-30">
-              <div className="text-gray">Suspicious zone</div>
-              {!!suspiciousZone && <SuspiciousZoneValue percents={suspiciousZone} />}
+              <div className="text-gray">Suspicious zone </div><SuspiciousZoneValue percents={suspiciousZone * 100 | 0} />
+              {/*{!!suspiciousZone && <SuspiciousZoneValue percents={suspiciousZone} />}*/}
             </div>
             <div className="font-weight-bold d-inline-block text-black large mb-15">Weather</div>
             <i className={classnames('icon float-right', {
