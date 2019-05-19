@@ -3,25 +3,58 @@ import PropTypes from 'prop-types';
 import Row from 'reactstrap/lib/Row';
 import Col from 'reactstrap/lib/Col';
 import { Card } from '../shared/components/card/card';
-
+import { getMap, setLocation } from '../shared/utils/map-service'
+import axios from 'axios'
 import './field-details.scss';
 
-const MOCK_FIELD = {
-  id: '2',
-  name: 'Wheat',
-  square: 5.6,
-  suspiciousZone: 56,
-  fieldShape: [
+let mock = {
+  "id": "2",
+  "name": "Wheat",
+  "square": 5.6,
+  "suspiciousZone": 56,
+  "fieldShape": [
     {
-      "lat": 51.520173035107824,
-      "lng": -0.08995056152343751
+      "lat": 51.514631587576304,
+      "lng": -0.1296043395996094
     },
     {
-      "lat": 51.520173035107824,
-      "lng": -0.09012222290039064
+      "lat": 51.486223845664355,
+      "lng": -0.1457061851397157
     },
-  ],
-};
+    {
+      "lat": 51.47922958822892,
+      "lng": -0.0830841064453125
+    },
+    {
+      "lat": 51.48849109416708,
+      "lng": -0.019226074218750003
+    },
+    {
+      "lat": 51.507373135789884,
+      "lng": 0.0313796871341765
+    },
+    {
+      "lat": 51.52193768456107,
+      "lng": -0.010299682617187502
+    },
+    {
+      "lat": 51.5424233564905,
+      "lng": -0.05012512207031251
+    },
+    {
+      "lat": 51.531268672483534,
+      "lng": -0.07450103759765626
+    },
+    {
+      "lat": 51.542949431188724,
+      "lng": -0.09873963659629227
+    },
+    {
+      "lat": 51.533774986527696,
+      "lng": -0.12970735318958762
+    }
+  ]
+}
 
 export class FieldDetails extends Component {
   static propTypes = {
@@ -41,8 +74,21 @@ export class FieldDetails extends Component {
   }
 
   componentDidMount() {
-    this.setState({ data: MOCK_FIELD })
-    // fetch field metadata
+    // ToDo add axios request
+    setTimeout(() => {
+      this.setState({ data: mock })
+      setLocation(mock.fieldShape[0].lat, mock.fieldShape[0].lng, 12)
+
+      this.fieldLayer = new window.L.FeatureGroup();
+
+      getMap().addLayer(this.fieldLayer);
+      const polygon = window.L.polygon(mock.fieldShape.map(({lat, lng}) => [lat, lng]));
+      this.fieldLayer.addLayer(polygon)
+    }, 0)
+  }
+
+  componentWillUnmount () {
+    this.fieldLayer.remove();
   }
 
   render() {

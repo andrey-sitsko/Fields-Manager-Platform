@@ -3,9 +3,9 @@ import { OpenStreetMapProvider } from 'leaflet-geosearch'
 const provider = new OpenStreetMapProvider();
 let map;
 
-export function setLocation(lat, long) {
+export function setLocation(lat, long, zoom = 18) {
   if (lat && long) {
-    map.setView([lat, long], 18)
+    map.setView([lat, long], zoom)
   }
 }
 
@@ -30,4 +30,8 @@ export function getMap() {
 
 export function registerMap(_map) {
   map = _map;
+}
+
+export function drawField(coordinates) {
+  // map.
 }

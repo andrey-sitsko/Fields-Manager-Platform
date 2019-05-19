@@ -54,7 +54,7 @@ export class AddFieldUI extends Component {
       coordinates: this.activeShape.layer._latlngs,
       name: this.fieldNameRef.current.value
     }
-    console.log(payload)
+    console.log(JSON.stringify(payload))
     this.props.history.push('/field-details/1234')
   }
 
