@@ -102,8 +102,17 @@ const httpPost = (host, port, path, data) => {
         reject(e);
       })
       res.on('end', function () {
-        const d = Buffer.concat(chunks);
-        resolve(JSON.parse(d.toString()))
+        const contentType = res.headers && res.headers['content-type'];
+        
+        console.log(contentType);
+
+        if (contentType.search('json') !== -1) {
+          const d = Buffer.concat(chunks);
+          resolve(JSON.parse(d.toString()))
+        } else {
+          const d = Buffer.concat(chunks);
+          resolve(d.toString('base64'))
+        }
       });
     });
     req.write(JSON.stringify(data));
@@ -181,7 +190,15 @@ module.exports.match = async (event) => {
       {url: imageUrl}
     );
 
+    const mask = await httpPost(
+      '34.201.39.171',
+      5000,
+      '/api/v1.0/process_image_from_url?task_name=detect_artifacts',
+      {url: imageUrl}
+    );
+
     ph.dmz = 1 - ph.class_percentages.field - ph.class_percentages.road;
+    ph.mask = mask;
 
     // call recognize api
     const prediction = {
