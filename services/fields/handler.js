@@ -154,9 +154,15 @@ module.exports.match = async (event) => {
       coords: JSON.parse(img.Body.toString()),
       name: images[i]
     }));
+
+    const isMatch = (coords, centers) => {
+      return Math.abs(centers.lat - coords.lat) + Math.abs(centers.lng - coords.lng) < 0.01
+    }
     
-    const matchedCoords = imagesAndCoords.find(s => s.coords.lat === centers.lat);
+    const matchedCoords = imagesAndCoords.find(s => isMatch(s.coords, centers));
     
+    console.log('Matched', matchedCoords);
+
     if (!matchedCoords) {
         const prediction = {
           "id": objectName.replace('fields/', '').replace('/meta.json', ''),
