@@ -159,28 +159,31 @@ module.exports.match = async (event) => {
       return Math.abs(centers.lat - coords.lat) + Math.abs(centers.lng - coords.lng) < 0.01
     }
 
-    // const isMatchRemote = async (photos, shapes) => {
-    //   const res = await httpPost(
-    //     '34.201.39.171',
-    //     5000,
-    //     '/api/v1.0/match_photos_with_field',
-    //     {shapes, photos}
-    //   );
+    const isMatchRemote = async (photos, shapes) => {
+      const res = await httpPost(
+        '34.201.39.171',
+        5000,
+        '/api/v1.0/match_photos_with_field',
+        {shapes, photos}
+      );
 
-    //   return res;
-    //   // return Math.abs(centers.lat - coords.lat) + Math.abs(centers.lng - coords.lng) < 0.01
-    // }
+      return res;
+      // return Math.abs(centers.lat - coords.lat) + Math.abs(centers.lng - coords.lng) < 0.01
+    }
     
-    const matchedCoords = imagesAndCoords.find(s => isMatch(s.coords, centers));
+    // const matchedCoords = imagesAndCoords.find(s => isMatch(s.coords, centers));
 
-    console.log(matchedCoords);
-    // const imgCoors = imagesAndCoords.map(d => d.coords);
-
-    // const predCoords = await isMatchRemote(imgCoors, fieldCoords.coords);
+    // console.log(matchedCoords);
     
-    // console.log('Matched', predCoords);
+    const imgCoors = imagesAndCoords.map(d => d.coords);
 
-    if (!matchedCoords) {
+    const predCoords = await isMatchRemote(imgCoors, fieldCoords.coords);
+    
+    const predictionImages = imagesAndCoords.filter((im, i) => predCoords[i]);
+
+    console.log(predictionImages);
+
+    if (!predictionImages) {
         const prediction = {
           "id": objectName.replace('fields/', '').replace('/meta.json', ''),
           "name": fieldCoords.name,
@@ -200,37 +203,47 @@ module.exports.match = async (event) => {
         };
     }
 
-    const imageUrl = `https://s3.amazonaws.com/${bucketName}/${matchedCoords.name}`.replace('.json', '.JPG');
-
-    console.log(imageUrl);
-    ph.id = crypto.randomBytes(16).toString("hex");
-    ph.src = imageUrl;
+    const imageUrls = predictionImages.map(p => `https://s3.amazonaws.com/${bucketName}/${p.name}`.replace('.json', '.JPG'));
 
     // http://34.201.39.171:5000/api/v1.0/process_image_from_url?task_name=detect_artifacts&with_original'
 
-    const ph = await httpPost(
-      '34.201.39.171',
-      5000,
-      '/api/v1.0/get_image_metadata_from_url?task_name=detect_artifacts',
-      {url: imageUrl}
-    );
+    async function readImages(files) {
+      const photos = [];
+      for(const imageUrl of imageUrls) {
+        const ph = await httpPost(
+          '34.201.39.171',
+          5000,
+          '/api/v1.0/get_image_metadata_from_url?task_name=detect_artifacts',
+          {url: imageUrl}
+        );
+  
+        const mask = await httpPost(
+          '34.201.39.171',
+          5000,
+          '/api/v1.0/process_image_from_url?task_name=detect_artifacts',
+          {url: imageUrl}
+        );
 
-    const mask = await httpPost(
-      '34.201.39.171',
-      5000,
-      '/api/v1.0/process_image_from_url?task_name=detect_artifacts',
-      {url: imageUrl}
-    );
+        if (typeof ph !== 'string')  {
+          ph.id = crypto.randomBytes(16).toString("hex");
+          ph.src = imageUrl;
+          ph.dmz = 1 - ph.class_percentages.field - ph.class_percentages.road;
+          ph.mask = mask;
 
-    ph.dmz = 1 - ph.class_percentages.field - ph.class_percentages.road;
-    ph.mask = mask;
+          photos.push(ph);
+        }
+      }
+      return photos;
+    };
+
+    const photos = await readImages(imageUrls);
 
     // call recognize api
     const prediction = {
       "id": objectName.replace('fields/', '').replace('/meta.json', ''),
       "name": fieldCoords.name,
       "fieldShape": fieldCoords.coords,
-      "photos": [ph]
+      "photos": photos
     };
 
     console.log(prediction);
