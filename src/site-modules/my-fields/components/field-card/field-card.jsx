@@ -26,7 +26,10 @@ export function FieldCard({ src, name, id }) {
         <div className="medium mr-10">{name}</div>
         <div className="small text-gray">Last modified {randomDay}.{randomMonth}.{randomYear}</div>
       </div>
-      <img className="field-card-image round" src={src} alt={name} />
+      <div className="field-card-image-container position-relative">
+        <img className="field-card-image w-100 h-100 round" src={src} alt={name} />
+        <div className="hover-overlay w-100 round" />
+      </div>
     </Link>
   )
 }

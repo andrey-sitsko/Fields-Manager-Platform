@@ -40,7 +40,10 @@ export function MyResources() {
           MY_RESOURCES_MAP.map(({ label, href, className }) => 
             <Link className="resource-link medium d-block" key={href} to={href}>
               <div className="mb-1">{label}</div>
-              <div className={`image ${className}`} />
+              <div className="image-container position-relative">
+                <div className={`image w-100 h-100 ${className}`} />
+                <div className="hover-overlay round" />
+              </div>
             </Link>
           )
         }

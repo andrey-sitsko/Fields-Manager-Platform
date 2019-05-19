@@ -113,7 +113,7 @@ export class PhotoDetails extends Component {
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">
-                NVDI <i className="icon icon-help" />
+                NDVI <i className="icon icon-help" />
               </div>
               <div>{Math.random().toFixed(2)}</div>
             </div>

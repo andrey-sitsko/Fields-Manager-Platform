@@ -112,10 +112,10 @@ export class Navigation extends Component {
         </div>
 
         {isBurgerOpen && 
-          <Row tag="nav" className="flex-column burger-menu round bg-white">
+          <Row tag="nav" className="flex-column burger-menu round bg-white px-0">
             {
               menuItems.map(({ label, href, iconClass }) => 
-                <Col className="h-100 nav-link" onClick={this.closeBurger} tag={NavLink} key={href} to={href}>
+                <Col className="h-100 nav-link px-20 py-10" onClick={this.closeBurger} tag={NavLink} key={href} to={href}>
                   <i className={`icon float-left mr-2 ${iconClass}`} /> {label}
                 </Col>
               )

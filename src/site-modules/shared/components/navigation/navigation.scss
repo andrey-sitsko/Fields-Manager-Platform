@@ -16,13 +16,16 @@
     top: 90px;
     left: 36px;
     width: 200px;
-    padding: 20px 10px 0 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.24);
 
     .nav-link {
       line-height: 30px;
-      padding: 0 0;
-      margin-bottom: 20px;
+
+      &:hover {
+        background: #eee;
+      }
     }
   }
 
@@ -42,6 +45,10 @@
     .nav-link {
       padding-top: 19px;
       padding-bottom: 19px;
+
+      &:hover {
+        background: #eee;
+      }
     }
 
     .user-photo {
