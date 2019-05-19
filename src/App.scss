@@ -22,6 +22,11 @@ a {
   }
 }
 
+.large {
+  font-size: 24px;
+  line-height: 28px;
+}
+
 .medium {
   font-size: 14px;
   line-height: 16px;
@@ -56,6 +61,30 @@ a {
   border-radius: 4px !important;
 }
 
+.pr-25 {
+  padding-right: 25px;
+}
+
+.pl-25 {
+  padding-left: 25px;
+}
+
 .mr-10 {
   margin-right: 10px;
+}
+
+.mb-5 {
+  margin-bottom: 5px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
 }

@@ -16,7 +16,7 @@ export function FieldsList({ fields }) {
         <i className="icon icon-filter"/>
       </div>
       <div className="field-cards align-items-end d-flex">
-        { fields.map(({ src, name }) => <FieldCard src={src} name={name} />) }
+        { fields.map(({ src, name, id }) => <FieldCard src={src} name={name} id={id} />) }
         <FieldCard />
       </div>
 
@@ -29,6 +29,7 @@ FieldsList.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       src: PropTypes.string,
+      id: PropTypes.string,
     })),
 }
 
