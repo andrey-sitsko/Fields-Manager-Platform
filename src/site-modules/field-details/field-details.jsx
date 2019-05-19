@@ -121,7 +121,7 @@ export class FieldDetailsUI extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        fieldId: PropTypes.string.isRequired,
       }),
     }),
   };
@@ -166,7 +166,7 @@ export class FieldDetailsUI extends Component {
         });
         marker.on('click', () => {
           this.preserveSelection = true;
-          this.props.history.push(`/photo-details/${photo.id}`)
+          this.props.history.push(`/my-fields/field-details/${this.props.match.params.fieldId}/photo-details/${photo.id}`)
         })
         marker.addTo(map)
       }

@@ -8,7 +8,7 @@ export function FieldCard({ src, name, id }) {
     return (
       <div className="empty-field-card">
         <div className="medium mb-1">Add new field</div>
-        <Link className="add-link round d-flex" to="/add-field">
+        <Link className="add-link round d-flex" to="/my-fields/add-field">
           <i className="icon icon-add m-auto d-block" />
         </Link>
       </div>
@@ -21,7 +21,7 @@ export function FieldCard({ src, name, id }) {
   const randomYear = Math.floor(Math.random() * 2) + 2017;
 
   return (
-    <Link className="field-card" to={`/field-details/${id}`}>
+    <Link className="field-card" to={`/my-fields/field-details/${id}`}>
       <div className="d-flex align-items-center mb-1">
         <div className="medium mr-10">{name}</div>
         <div className="small text-gray">Last modified {randomDay}.{randomMonth}.{randomYear}</div>

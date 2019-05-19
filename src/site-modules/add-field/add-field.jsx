@@ -55,7 +55,7 @@ export class AddFieldUI extends Component {
       name: this.fieldNameRef.current.value
     }
     console.log(JSON.stringify(payload))
-    this.props.history.push('/field-details/1234')
+    this.props.history.push('/my-fields/field-details/1234')
   }
 
   render() {
