@@ -89,7 +89,12 @@ export class Navigation extends Component {
       <div className="navigation position-fixed">
         <Row tag="nav" className="nav-container round bg-white align-items-center">
           <Col tag={Button} className="burger-btn text-black border-0" color="link" onClick={this.toggleBurger}>
-            <i className={classnames('icon', { 'icon-cross': isBurgerOpen, 'icon-burger': !isBurgerOpen })} />
+            {/* <i className={classnames('icon', { 'icon-cross': isBurgerOpen, 'icon-burger': !isBurgerOpen })} /> */}
+            <div className={classnames('burger-icon', { open: isBurgerOpen })}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </Col>
           {
             menuItems.map(({ label, href, isPrimary }) => isPrimary && 
