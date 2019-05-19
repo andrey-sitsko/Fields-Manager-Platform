@@ -16,6 +16,18 @@ export async function searchAddress(addr) {
   }
 }
 
+export async function enableDraw() {
+  map.pm.enableDraw('Polygon', {  });
+}
+
+export async function disableDraw() {
+  map.pm.disableDraw('Polygon');
+}
+
+export function getMap() {
+  return map;
+}
+
 export function registerMap(_map) {
   map = _map;
 }
