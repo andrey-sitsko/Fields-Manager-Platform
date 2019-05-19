@@ -31,4 +31,8 @@
 .field-card-image-container {
   width: 200px;
   height: 110px;
+
+  .no-preview {
+    background: url('../../../../assets/no-preview.png');
+  }
 }

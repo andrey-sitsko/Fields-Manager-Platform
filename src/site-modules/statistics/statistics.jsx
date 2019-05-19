@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Row from 'reactstrap/lib/Row';
 import Col from 'reactstrap/lib/Col';
 import { Card } from '../shared/components/card/card';
@@ -45,7 +45,7 @@ export class Statistics extends Component {
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Overall square</div>
-              <div>{fields.reduce((acc, { square }) => acc + square, 0)}</div>
+              <div>{fields.reduce((acc, { square }) => acc + square, 0)}ha</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Average yield</div>

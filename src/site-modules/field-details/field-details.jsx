@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classnames from 'classnames'
 import PropTypes from 'prop-types';
 import Row from 'reactstrap/lib/Row';
@@ -192,7 +192,15 @@ export class FieldDetailsUI extends Component {
         <div className="text-center medium mb-15">{name}</div>
         <Row>
           <Col xs={6} className="pr-25">
-            <div className="font-weight-bold large text-black mb-15">Common Info</div>
+            <div className="font-weight-bold large text-black mb-15">
+              Common Info
+              {!square && <Fragment>
+                  <i class="icon icon-help no-photo-toggle ml-1" />
+                <Card className="no-photo-tooltip medium font-weight-normal">
+                  We don’t have photos of your field yet. But you can add them mannualy. JPG and PNG files are applicable.
+                </Card>
+              </Fragment>}
+            </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Square</div>
               {!!square && <div>{square}ha</div>}

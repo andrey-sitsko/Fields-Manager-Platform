@@ -7,6 +7,23 @@
     left: 200px;    
   }
 
+  .no-photo-toggle {
+    cursor: pointer;
+  
+    &:hover + .no-photo-tooltip {
+      display: block;
+    }
+  }
+  
+  .no-photo-tooltip.content-card {
+    display: none;
+    position: fixed;
+    padding: 10px;
+    max-width: 250px;
+    top: 100px;
+    left: 210px;
+  }
+
   .composition-tooltip.content-card {
     display: none;
     padding: 10px;
