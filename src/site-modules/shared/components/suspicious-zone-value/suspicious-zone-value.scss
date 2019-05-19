@@ -1,0 +1,16 @@
+.text-red {
+  .icon-warning {
+    vertical-align: text-bottom;
+  }
+}
+
+.limit-toggle:hover + .limit-tooltip {
+  display: block;
+}
+
+.limit-tooltip.content-card {
+  display: none;
+  position: fixed;
+  padding: 10px;
+  max-width: 255px;
+}

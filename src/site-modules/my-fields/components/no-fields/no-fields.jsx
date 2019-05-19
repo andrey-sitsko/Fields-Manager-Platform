@@ -7,7 +7,7 @@ import './no-fields.scss';
 export function NoFields() {
   return (
     <div className="no-fields text-center px-4">
-      <div className="text text-center mt-3 medium">There are no fields yet</div>
+      <div className="text text-center mt-4 medium">There are no fields yet</div>
       <i className="d-block mx-auto icon icon-planting"/>
       <Button tag={Link} to="/add-field" className="add-btn text-white bg-black round-half medium">
         ADD NEW

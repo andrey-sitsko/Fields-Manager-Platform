@@ -1,0 +1,65 @@
+.photo-details-card {
+  width: 800px;
+  padding-bottom: 10px;
+
+  .icon-date {
+    vertical-align: text-bottom;
+  }
+
+  .type-btn.btn {
+    box-shadow: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+  }
+
+  .limit-tooltip {
+    top: 630px;
+    left: 210px;    
+  }
+
+  .legend-tooltip.content-card {
+    position: fixed;
+    top: 440px;
+    left: 805px;
+    display: none;
+    padding: 10px;
+
+    i {
+      vertical-align: text-top;
+      margin-right: 5px;
+      display: inline-block;
+      height: 15px;
+      width: 15px;
+    }
+
+    .green-legend {
+      background-color: rgba(69,166,67,0.8);
+    }
+
+    .blue-legend {
+      background-color: rgba(32,170,170,0.8);
+    }
+
+    .pink-legend {
+      background-color: rgba(201,88,201,0.8);
+    }
+
+    .yellow-legend {
+      background-color: rgba(185,187,82,0.8);
+    }
+
+    .red-legend {
+      background-color: rgba(193,82,82,0.8);
+    }
+  }
+
+  .legend-toggle {
+    cursor: pointer;
+
+    &:hover {
+      + .legend-tooltip {
+        display: block;
+      }
+    }
+  }  
+}

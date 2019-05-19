@@ -1,4 +1,22 @@
 .field-details-card {
   width: 441px;
   padding-bottom: 10px;
+
+  .limit-tooltip {
+    top: 155px;
+    left: 200px;    
+  }
+
+  .composition-tooltip.content-card {
+    display: none;
+    padding: 10px;
+    max-width: 250px;
+    position: fixed;
+    top: 85px;
+    left: 425px;
+  }
+
+  .composition-toggle:hover + .composition-tooltip {
+    display: block;
+  }
 }

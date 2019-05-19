@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import classnames from 'classnames'
 import PropTypes from 'prop-types';
 import Row from 'reactstrap/lib/Row';
 import Col from 'reactstrap/lib/Col';
 import { Card } from '../shared/components/card/card';
 import { getMap, setLocation } from '../shared/utils/map-service'
 import axios from 'axios'
+import { SuspiciousZoneValue } from '../shared/components/suspicious-zone-value/suspicious-zone-value';
+
 import './field-details.scss';
-import classnames from 'classnames'
 
 let mock = {
   "id": "2",
@@ -121,7 +123,7 @@ export class FieldDetails extends Component {
             </div>
             <div className="d-flex justify-content-between medium mb-30">
               <div className="text-gray">Suspicious zone</div>
-              <div>{suspiciousZone}%</div>
+              <SuspiciousZoneValue percents={suspiciousZone} />
             </div>
             <div className="font-weight-bold d-inline-block text-black large mb-15">Weather</div>
             <i className={classnames('icon float-right', {
@@ -154,7 +156,13 @@ export class FieldDetails extends Component {
             </div>
           </Col>
           <Col xs={6} className="pl-25">
-            <div className="font-weight-bold text-black large mb-1">Composition</div>
+            <div className="font-weight-bold text-black large mb-1">
+              Composition
+              <i className="ml-1 icon icon-help composition-toggle" />
+              <Card className="composition-tooltip medium font-weight-normal">
+                You can specify agrochemical composition mannualy to get better agricultural technology predictions from us. JSON files are applicable.
+              </Card>
+            </div>
             <div className="text-gray small mb-10">Last updated 01.02.2019</div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Nitrogen</div>
