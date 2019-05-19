@@ -87,9 +87,8 @@ export class Navigation extends Component {
 
     return (
       <div className="navigation position-fixed">
-        <div className="nav-overlay" />
         <Row tag="nav" className="nav-container round bg-white align-items-center">
-          <Col tag={Button} className="burger-btn p-4 text-black border-0" color="link" onClick={this.toggleBurger}>
+          <Col tag={Button} className="burger-btn text-black border-0" color="link" onClick={this.toggleBurger}>
             <i className={classnames('icon', { 'icon-cross': isBurgerOpen, 'icon-burger': !isBurgerOpen })} />
           </Col>
           {

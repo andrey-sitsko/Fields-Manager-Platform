@@ -1,11 +1,15 @@
+.nav-overlay {
+  z-index: 99;
+  position: fixed;
+  top: -1px;
+  width: 100%;
+  pointer-events: none;
+  height: 170px;
+  background: linear-gradient(180deg, #EEEEEE 0%, rgba(0,0,0,0.3) 0.71%, rgba(0,0,0,0.3) 60.64%, rgba(255,255,255,0) 100%);
+}
+
 .navigation {
   z-index: 100;
-
-  .nav-overlay {
-    pointer-events: none;
-    height: 170px;
-    background: linear-gradient(180deg, #EEEEEE 0%, rgba(0,0,0,0.3) 0.71%, rgba(0,0,0,0.3) 60.64%, rgba(255,255,255,0) 100%);
-  }
 
   .burger-menu {
     position: fixed;
@@ -23,20 +27,21 @@
   }
 
   .nav-container {
-    height: 63px;
+    z-index: 99;
+    height: 60px;
     position: fixed;
     top: 20px;
     left: 36px;
 
     .burger-btn {
-      padding: 20px;
-      line-height: 0.75rem;
+      padding: 23px;
+      line-height: 0.73rem;
       text-decoration: none;
     }
 
     .nav-link {
-      padding-top: 21px;
-      padding-bottom: 21px;
+      padding-top: 19px;
+      padding-bottom: 19px;
     }
 
     .user-photo {
@@ -48,18 +53,18 @@
 }
 
 .navigation_button {
-  height: 63px;
-  width: 63px;
+  height: 60px;
+  width: 60px;
   top: 20px;
   cursor: pointer;
 }
 
 .navigation_button__search {
-  left: 683px;
+  left: 560px;
 }
 
 .navigation_button__my-location {
-  left: 590px;
+  left: 480px;
 }
 
 .navigation_location-search.form-control {

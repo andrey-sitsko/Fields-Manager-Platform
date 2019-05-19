@@ -14,7 +14,7 @@ export function CardUI({ className, hasBackBtn, hasCloseBtn, history, children }
         <Button className="back-btn p-0 icon icon-back" color="link" onClick={history.goBack} />
       }
       {hasCloseBtn &&
-        <Link to="/" className="close-btn icon icon-cross2" />
+        <Link to="/" className="close-btn icon icon-cross" />
       }
       {children}
     </div>

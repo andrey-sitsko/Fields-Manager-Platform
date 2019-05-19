@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import Input from 'reactstrap/lib/Input'
-import Label from 'reactstrap/lib/Label'
-import Button from 'reactstrap/lib/Button'
+import Input from 'reactstrap/lib/Input';
+import Label from 'reactstrap/lib/Label';
+import Button from 'reactstrap/lib/Button';
 import { Card } from '../shared/components/card/card';
 import { enableDraw, disableDraw, getMap } from '../shared/utils/map-service';
-import { withRouter } from 'react-router-dom'
-import axios from 'axios'
+import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 
 import './add-field.scss';
 
@@ -16,7 +16,7 @@ export class AddFieldUI extends Component {
 
     this.fieldNameRef = React.createRef();
     this.state = {
-      isBtnDisabled: false
+      isBtnDisabled: true,
     }
   }
   

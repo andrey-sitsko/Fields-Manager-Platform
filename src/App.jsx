@@ -12,6 +12,7 @@ function App({history}) {
         <AppRoute />
       </Router>
       <Map/>
+      <div className="nav-overlay" />
     </Fragment>
   );
 }

@@ -14,15 +14,15 @@ export default function AppRoute() {
   return (
     <Fragment>
       <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/add-field" exact component={AddField} />
-      <Route path="/field-details/:id" exact component={FieldDetails} />
-      <Route path="/my-fields" exact component={MyFields} />
-      <Route path="/my-resources" exact component={MyResources} />
-      <Route path="/photo-details/:id" exact component={PhotoDetails} />
-      <Route path="/statistics" exact component={Statistics} />
-      <Route path="/settings" exact component={Settings} />
-    </Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/add-field" exact component={AddField} />
+        <Route path="/field-details/:id" exact component={FieldDetails} />
+        <Route path="/my-fields" exact component={MyFields} />
+        <Route path="/my-resources" exact component={MyResources} />
+        <Route path="/photo-details/:id" exact component={PhotoDetails} />
+        <Route path="/statistics" exact component={Statistics} />
+        <Route path="/settings" exact component={Settings} />
+      </Switch>
       <Switch>
         <Route path="/" component={Navigation} />
       </Switch>
