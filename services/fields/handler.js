@@ -85,6 +85,32 @@ async function allBucketKeys(s3, bucket) {
   return keys;
 };
 
+const httpPost = (host, port, path, data) => {
+  return new Promise((resolve, reject) => {
+    const req = http.request({
+      hostname: host,
+      port: port,
+      path: path,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }, function (res) {
+      const chunks = [];
+      res.on('data', function(d) { chunks.push(d); });
+      res.on('error', function(e) {
+        reject(e);
+      })
+      res.on('end', function () {
+        const d = Buffer.concat(chunks);
+        resolve(JSON.parse(d.toString()))
+      });
+    });
+    req.write(JSON.stringify(data));
+    req.end();
+  })
+}
+
 module.exports.match = async (event) => {
   try {
     const data = event.Records[0].s3;
@@ -122,46 +148,50 @@ module.exports.match = async (event) => {
     
     const matchedCoords = imagesAndCoords.find(s => s.coords.lat === centers.lat);
     
-    if (!matchedCoords) return { statusCode: 200 }
+    if (!matchedCoords) {
+        const prediction = {
+          "id": objectName.replace('fields/', '').replace('/meta.json', ''),
+          "name": fieldCoords.name,
+          "fieldShape": fieldCoords.coords,
+        }
 
-    const imageUrl = `https://s3.amazonaws.com/${bucketName}/${matchedCoords.name}`;
+        await s3Upload({
+          Bucket: 'epam-jam1',
+          Key: objectName.replace('meta', 'prediction'),
+          ACL: 'public-read',
+          Body: JSON.stringify(prediction),
+          ContentType: 'application/json',
+        });
+    
+        return {
+          statusCode: 200,
+        };
+    }
+
+    const imageUrl = `https://s3.amazonaws.com/${bucketName}/${matchedCoords.name}`.replace('.json', '.JPG');
 
     console.log(imageUrl);
+
+    // http://34.201.39.171:5000/api/v1.0/process_image_from_url?task_name=detect_artifacts&with_original'
+
+    const ph = await httpPost(
+      '34.201.39.171',
+      5000,
+      '/api/v1.0/get_image_metadata_from_url?task_name=detect_artifacts',
+      {url: imageUrl}
+    );
+
+    ph.dmz = 1 - ph.class_percentages.field - ph.class_percentages.road;
 
     // call recognize api
     const prediction = {
       "id": objectName.replace('fields/', '').replace('/meta.json', ''),
       "name": fieldCoords.name,
       "fieldShape": fieldCoords.coords,
-      "photos": [{
-        "class_areas": {
-          "bush": 2021.8091862405313, 
-          "field": 15103.386228094381, 
-          "field_shadowed": 108.63382305087225, 
-          "road": 1154.8502744198556, 
-          "trees": 2728.046351214885
-        }, 
-        "class_percentages": {
-          "bush": 0.09574444444444444, 
-          "field": 0.7152333333333334, 
-          "field_shadowed": 0.0051444444444444445, 
-          "road": 0.05468888888888889, 
-          "trees": 0.12918888888888888
-        }, 
-        "lat": 53.923339416666664, 
-        "lng": 27.68277516666667,
-        "terrain_size": {
-          "mpp_x": 0.0423048523206751, 
-          "mpp_y": 0.055461790904828875, 
-          "terrain_size_x": 169.2194092827004, 
-          "terrain_size_y": 124.78902953586497
-        },
-        src: imageUrl.replace('json', 'JPG')
-      }]
+      "photos": [ph]
     };
 
-
-    prediction.photos[0].dmz = 1 - prediction.photos[0].class_percentages.field - prediction.photos[0].class_percentages.road;
+    console.log(prediction);
 
     await s3Upload({
       Bucket: 'epam-jam1',
@@ -189,7 +219,7 @@ module.exports.fieldCreate = async (event) => {
     const data = JSON.parse(event.body || '{}');
     const id = crypto.randomBytes(16).toString("hex");
     await s3Upload(
-      s3FieldParams(id, { name: 'field', coords: mock.area })
+      s3FieldParams(id, { name: data.name, coords: data.fieldShape })
     );
 
     return {
@@ -267,7 +297,7 @@ module.exports.fields = async (event) => {
         data: images.map(img => JSON.parse(img.Body.toString())).map(v => ({
           id: v.id,
           name: v.name,
-          src: v.photos[0].src
+          src: v.photos ? v.photos[0].src : null
         }))
       }),
     };
