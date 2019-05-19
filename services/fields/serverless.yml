@@ -22,6 +22,15 @@ functions:
           method: get
           cors: true
 
+  fieldDetails:
+    handler: handler.fieldDetails
+    timeout: 30
+    events:
+      - http:
+          path: field/{id}
+          method: get
+          cors: true
+
   coords-upload:
     handler: handler.fieldCreate
     timeout: 30

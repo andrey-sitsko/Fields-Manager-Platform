@@ -103,6 +103,8 @@ module.exports.match = async (event) => {
 
     const fieldCoords = JSON.parse(Body);
 
+    console.log(fieldCoords);
+
     const centers = getCenters(fieldCoords.coords);
 
     console.log(centers);
@@ -129,32 +131,37 @@ module.exports.match = async (event) => {
     // call recognize api
     const prediction = {
       "id": objectName.replace('fields/', '').replace('/meta.json', ''),
-      "class_areas": {
-        "bush": 2021.8091862405313, 
-        "field": 15103.386228094381, 
-        "field_shadowed": 108.63382305087225, 
-        "road": 1154.8502744198556, 
-        "trees": 2728.046351214885
-      }, 
-      "class_percentages": {
-        "bush": 0.09574444444444444, 
-        "field": 0.7152333333333334, 
-        "field_shadowed": 0.0051444444444444445, 
-        "road": 0.05468888888888889, 
-        "trees": 0.12918888888888888
-      }, 
-      "lat": 53.923339416666664, 
-      "lng": 27.68277516666667,
-      "terrain_size": {
-        "mpp_x": 0.0423048523206751, 
-        "mpp_y": 0.055461790904828875, 
-        "terrain_size_x": 169.2194092827004, 
-        "terrain_size_y": 124.78902953586497
-      },
-      source: imageUrl.replace('json', 'JPG')
+      "name": fieldCoords.name,
+      "fieldShape": fieldCoords.coords,
+      "photos": [{
+        "class_areas": {
+          "bush": 2021.8091862405313, 
+          "field": 15103.386228094381, 
+          "field_shadowed": 108.63382305087225, 
+          "road": 1154.8502744198556, 
+          "trees": 2728.046351214885
+        }, 
+        "class_percentages": {
+          "bush": 0.09574444444444444, 
+          "field": 0.7152333333333334, 
+          "field_shadowed": 0.0051444444444444445, 
+          "road": 0.05468888888888889, 
+          "trees": 0.12918888888888888
+        }, 
+        "lat": 53.923339416666664, 
+        "lng": 27.68277516666667,
+        "terrain_size": {
+          "mpp_x": 0.0423048523206751, 
+          "mpp_y": 0.055461790904828875, 
+          "terrain_size_x": 169.2194092827004, 
+          "terrain_size_y": 124.78902953586497
+        },
+        src: imageUrl.replace('json', 'JPG')
+      }]
     };
 
-    prediction.dmz = 1 - prediction.class_percentages.field - prediction.class_percentages.road;
+
+    prediction.photos[0].dmz = 1 - prediction.photos[0].class_percentages.field - prediction.photos[0].class_percentages.road;
 
     await s3Upload({
       Bucket: 'epam-jam1',
@@ -163,43 +170,6 @@ module.exports.match = async (event) => {
       Body: JSON.stringify(prediction),
       ContentType: 'application/json',
     });
-
-    // const res = await Promise.all(images.map(img => s3Client.selectObjectContent({
-    //   Bucket: bucketName,
-    //   Key: img,
-    //   ExpressionType: 'SQL',
-    //   Expression: `SELECT s.* FROM S3Object[*][*] s WHERE s.lat LIKE ${centers.lat} AND s.lng LIKE ${centers.lng}`,
-    //   InputSerialization: {
-    //     JSON: {
-    //       Type: 'DOCUMENT'
-    //     }
-    //   },
-    //   OutputSerialization: {
-    //     JSON: {
-    //       RecordDelimiter: '\n'
-    //     }
-    //   }
-    // })
-    // .promise()));
-
-    // const matchedFiles = await Promise.all(res.map(output => {
-    //   return new Promise((resolve) => {
-    //     output.Payload.on('data', event => {
-    //       console.log(event);
-
-    //       if (event.Records) {
-    //         // THIS IS OUR RESULT
-    //         console.log(event.Records);
-
-    //         let buffer = event.Records.Payload;
-
-    //         resolve(buffer.toString());
-    //       }
-    //     });
-    //   })
-    // }));
-
-    // console.log(matchedFiles);
 
     return {
       statusCode: 200,
@@ -224,8 +194,8 @@ module.exports.fieldCreate = async (event) => {
 
     return {
       statusCode: 200,
+      headers: { ...CORS },
       body: JSON.stringify({
-        headers: { ...CORS },
         status: 'OK',
         data: {
           fieldId: id,
@@ -236,8 +206,42 @@ module.exports.fieldCreate = async (event) => {
     console.log(e);
     return {
       statusCode: 500,
+      headers: { ...CORS },
       body: JSON.stringify({
-        headers: { ...CORS },
+        status: 'ERROR',
+        data: {
+          error: e.message || ''
+        }
+      }),
+    };
+  }
+};
+
+module.exports.fieldDetails = async (event) => {
+  console.log(event);
+  try {
+    const { id } = event.pathParameters;
+
+    const fileList = await allBucketKeys(s3Client, 'epam-jam1');
+
+    const fieldKey = fileList.find(file => file.search('fields') !== -1 && file.search(`${id}`) !== -1 && file.search('prediction.json') !== -1)
+    console.log(fieldKey);
+    const data = await s3Get({ Bucket: 'epam-jam1',  Key: fieldKey });
+
+    return {
+      statusCode: 200,
+      headers: { ...CORS },
+      body: JSON.stringify({
+        status: 'OK',
+        data: JSON.parse(data.Body.toString())
+      })
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      statusCode: 500,
+      headers: { ...CORS },
+      body: JSON.stringify({
         status: 'ERROR',
         data: {
           error: e.message || ''
@@ -254,13 +258,17 @@ module.exports.fields = async (event) => {
     const fileList = await allBucketKeys(s3Client, 'epam-jam1');
     const predictions = fileList.filter(file => file.search('field') !== -1 && file.search('prediction.json') !== -1)
     const images = await Promise.all(predictions.map(img => s3Get({ Bucket: 'epam-jam1',  Key: img })));
-    
+     
     return {
       statusCode: 200,
+      headers: { ...CORS },
       body: JSON.stringify({
-        headers: { ...CORS },
         status: 'OK',
-        data: images.map(img => JSON.parse(img.Body.toString()))
+        data: images.map(img => JSON.parse(img.Body.toString())).map(v => ({
+          id: v.id,
+          name: v.name,
+          src: v.photos[0].src
+        }))
       }),
     };
 
@@ -268,8 +276,8 @@ module.exports.fields = async (event) => {
     console.log(e);
     return {
       statusCode: 500,
+      headers: { ...CORS },
       body: JSON.stringify({
-        headers: { ...CORS },
         status: 'ERROR',
         data: {
           error: e.message || ''
