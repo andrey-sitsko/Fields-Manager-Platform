@@ -25,7 +25,11 @@ const MOCK_FIELD = {
 
 export class FieldDetails extends Component {
   static propTypes = {
-    id: PropTypes.string.isRequired,
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      }),
+    }),
   };
 
   constructor(props) {
@@ -55,29 +59,29 @@ export class FieldDetails extends Component {
           <Col xs={6} className="pr-25">
             <div className="font-weight-bold large text-black mb-15">Common Info</div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Square</div>
+              <div className="text-gray">Square</div>
               <div>{square}ha</div>
             </div>
             <div className="d-flex justify-content-between medium mb-30">
-              <div class="text-gray">Suspicious zone</div>
+              <div className="text-gray">Suspicious zone</div>
               <div>{suspiciousZone}%</div>
             </div>
             <div className="font-weight-bold d-inline-block text-black large mb-15">Weather</div>
             <i className="icon icon-lightning float-right" />
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Temperature</div>
+              <div className="text-gray">Temperature</div>
               <div>14&deg;</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Humidity</div>
+              <div className="text-gray">Humidity</div>
               <div>77%</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Wind</div>
+              <div className="text-gray">Wind</div>
               <div>11m/s</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Pressure</div>
+              <div className="text-gray">Pressure</div>
               <div>765mm</div>
             </div>
           </Col>
@@ -85,23 +89,23 @@ export class FieldDetails extends Component {
             <div className="font-weight-bold text-black large mb-1">Composition</div>
             <div className="text-gray small mb-10">Last updated 01.02.2019</div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Nitrogen</div>
+              <div className="text-gray">Nitrogen</div>
               <div>24g</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Potassium</div>
+              <div className="text-gray">Potassium</div>
               <div>40g</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Phosphorus</div>
+              <div className="text-gray">Phosphorus</div>
               <div>30g</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Humus</div>
+              <div className="text-gray">Humus</div>
               <div>6%</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
-              <div class="text-gray">Acidity</div>
+              <div className="text-gray">Acidity</div>
               <div>5.5pH</div>
             </div>
           </Col>

@@ -16,7 +16,7 @@ export function FieldsList({ fields }) {
         <i className="icon icon-filter"/>
       </div>
       <div className="field-cards align-items-end d-flex">
-        { fields.map(({ src, name, id }) => <FieldCard src={src} name={name} id={id} />) }
+        { fields.map(({ src, name, id }) => <FieldCard key={`field-${id}`} src={src} name={name} id={id} />) }
         <FieldCard />
       </div>
 
