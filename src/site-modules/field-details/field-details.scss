@@ -16,7 +16,11 @@
     left: 425px;
   }
 
-  .composition-toggle:hover + .composition-tooltip {
-    display: block;
+  .composition-toggle {
+    cursor: pointer;
+
+    &:hover + .composition-tooltip {
+      display: block;
+    }
   }
 }
