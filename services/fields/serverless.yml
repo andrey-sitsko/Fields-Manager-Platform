@@ -42,7 +42,8 @@ functions:
 
   match:
     handler: handler.match
-    timeout: 120
+    timeout: 360
+    memorySize: 1024
     events:
       - s3:
           bucket: epam-jam1
