@@ -6,6 +6,7 @@ import { Card } from '../shared/components/card/card';
 import { getMap, setLocation } from '../shared/utils/map-service'
 import axios from 'axios'
 import './field-details.scss';
+import classnames from 'classnames'
 
 let mock = {
   "id": "2",
@@ -75,7 +76,7 @@ export class FieldDetails extends Component {
 
   componentDidMount() {
     // ToDo add axios request
-    setTimeout(() => {
+    setTimeout(async () => {
       this.setState({ data: mock })
       setLocation(mock.fieldShape[0].lat, mock.fieldShape[0].lng, 12)
 
@@ -84,6 +85,16 @@ export class FieldDetails extends Component {
       getMap().addLayer(this.fieldLayer);
       const polygon = window.L.polygon(mock.fieldShape.map(({lat, lng}) => [lat, lng]));
       this.fieldLayer.addLayer(polygon)
+
+      const {data: weather} = await axios.get(`https://api.openweathermap.org/data/2.5/weather?appid=29e93815caecbaae939c0f3c29cd57d9&units=metric&lon=${mock.fieldShape[0].lng}&lat=${mock.fieldShape[0].lat}`)
+
+      this.setState({
+        temperature: weather.main.temp,
+        humidity: weather.main.humidity,
+        wind: weather.wind.speed,
+        pressure: weather.main.pressure,
+        weatherDescription: weather.weather[0].description
+      })
     }, 0)
   }
 
@@ -113,22 +124,32 @@ export class FieldDetails extends Component {
               <div>{suspiciousZone}%</div>
             </div>
             <div className="font-weight-bold d-inline-block text-black large mb-15">Weather</div>
-            <i className="icon icon-lightning float-right" />
+            <i className={classnames('icon float-right icon-weather-fallback', {
+              'icon-cleat-sky': this.state.weatherDescription === 'clear sky',
+              'icon-few-clouds': this.state.weatherDescription === 'few clouds',
+              'icon-shattered-clouds': this.state.weatherDescription === 'scattered clouds',
+              'icon-broken-cloud': this.state.weatherDescription === 'broken clouds',
+              'icon-shower-rain': this.state.weatherDescription === 'shower rain',
+              'icon-rain': this.state.weatherDescription === 'rain',
+              'icon-snow': this.state.weatherDescription === 'snow',
+              'icon-mist': this.state.weatherDescription === 'mist' || this.state.weatherDescription === 'haze',
+              'icon-thunderstorm': this.state.weatherDescription === 'thunderstorm'
+            })} />
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Temperature</div>
-              <div>14&deg;</div>
+              <div>{this.state.temperature}</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Humidity</div>
-              <div>77%</div>
+              <div>{this.state.humidity}%</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Wind</div>
-              <div>11m/s</div>
+              <div>{this.state.wind}m/s</div>
             </div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Pressure</div>
-              <div>765mm</div>
+              <div>{this.state.pressure}mm</div>
             </div>
           </Col>
           <Col xs={6} className="pl-25">

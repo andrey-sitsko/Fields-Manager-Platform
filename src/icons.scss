@@ -103,3 +103,63 @@
   height: 22px;
   width: 22px;
 }
+
+.icon-weather-fallback {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/clear_sky.svg') !important;
+}
+
+.icon-broken-cloud {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/broken_clouds.svg') !important;
+}
+
+.icon-cleat-sky {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/clear_sky.svg') !important;
+}
+
+.icon-few-clouds {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/few_clouds.svg') !important;
+}
+
+.icon-mist {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/mist.svg') !important;
+}
+
+.icon-rain {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/rain.svg') !important;
+}
+
+.icon-shattered-clouds {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/scattered_clouds.svg') !important;
+}
+
+.icon-snow {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/snow.svg') !important;
+}
+
+.icon-thunderstorm {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/thunderstorm.svg') !important;
+}
+
+.icon-shower-rain {
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/shower_rain.svg') !important;
+}
