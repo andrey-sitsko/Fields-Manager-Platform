@@ -26,7 +26,7 @@ export class MyFields extends Component {
     let {data: {data: fields}} = await axios.get(
       'https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/fields')
 
-    this.setState({fields: fields.slice(-3), isLoading: false})
+    this.setState({fields: fields.slice(0, 4), isLoading: false})
   }
 
   render () {
