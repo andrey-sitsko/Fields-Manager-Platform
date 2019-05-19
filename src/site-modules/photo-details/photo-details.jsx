@@ -8,6 +8,7 @@ import { Card } from '../shared/components/card/card';
 import { SuspiciousZoneValue } from '../shared/components/suspicious-zone-value/suspicious-zone-value';
 
 import './photo-details.scss';
+import { removeMapSelection } from '../shared/utils/map-service'
 
 const MOCK_PHOTO = {
   id: 'p1',
@@ -56,6 +57,10 @@ export class PhotoDetails extends Component {
     this.setState({ photoType: innerText });
   }
 
+  onCLoseCLick = () => {
+    removeMapSelection()
+  }
+
   render() {
     const { data, photoType } = this.state;
 
@@ -66,7 +71,7 @@ export class PhotoDetails extends Component {
     const { fieldName, originalSrc, square, suspiciousZone, lat, lng } = this.state.data;
 
     return (
-      <Card className="photo-details-card" hasBackBtn hasCloseBtn>
+      <Card className="photo-details-card" hasBackBtn hasCloseBtn onCloseClick={this.onCLoseCLick}>
         <div className="text-center medium mb-10">{fieldName} (photo view)</div>
         <img className="w-100 mb-10" src={originalSrc} alt="field" />
         <div className="d-flex justify-content-between align-items-center mb-20">

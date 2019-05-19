@@ -32,6 +32,10 @@ export function registerMap(_map) {
   map = _map;
 }
 
-export function drawField(coordinates) {
-  // map.
+export function removeMapSelection() {
+  map.eachLayer((l) => {
+    if (!l._url || !l._url.indexOf('google')) {
+      l.remove();
+    }
+  })
 }

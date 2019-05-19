@@ -7,14 +7,16 @@ import { withRouter } from 'react-router-dom';
 
 import './card.scss';
 
-export function CardUI({ className, hasBackBtn, hasCloseBtn, history, children }) {
+export function CardUI({ className, hasBackBtn, hasCloseBtn, history, children, onCloseClick = () => {} }) {
   return (
     <div className={classnames('content-card round', className)}>
       {hasBackBtn &&
         <Button className="back-btn p-0 icon icon-back" color="link" onClick={history.goBack} />
       }
       {hasCloseBtn &&
-        <Link to="/" className="close-btn icon icon-cross" />
+        <div onClick={onCloseClick}>
+          <Link to="/" className="close-btn icon icon-cross" />
+        </div>
       }
       {children}
     </div>

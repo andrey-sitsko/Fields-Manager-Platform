@@ -10,7 +10,7 @@ import { SuspiciousZoneValue } from '../shared/components/suspicious-zone-value/
 import { withRouter } from 'react-router-dom';
 
 import './field-details.scss';
-import { AddFieldUI } from '../add-field/add-field'
+import {removeMapSelection} from '../shared/utils/map-service'
 
 let mock = {
   "id": "2",
@@ -85,7 +85,7 @@ let mock = {
         "terrain_size_y": 124.78902953586497
       },
       "source": "https://s3.amazonaws.com/epam-jam1/images/DJI_0109.JPG",
-      "dmz": 0.23007777777777771
+      "dmz": 0.17
     },
     {
       "id": "67aa8910056f4bfe8b8158557434c5bc",
@@ -157,12 +157,15 @@ export class FieldDetailsUI extends Component {
       })
 
       const map = getMap();
-      this.photoMarkers = [];
 
       for (let photo of mock.photos) {
-        const marker = window.L.marker({lng: photo.lng, lat: photo.lat});
-        this.photoMarkers.push(marker);
+        const marker = window.L.marker([photo.lat, photo.lng],{
+          icon: window.L.icon({
+            iconUrl: photo.dmz * 100 > 20 ? '/oval-red.svg' : '/oval-blue.svg'
+          })
+        });
         marker.on('click', () => {
+          this.preserveSelection = true;
           this.props.history.push(`/photo-details/${photo.id}`)
         })
         marker.addTo(map)
@@ -171,8 +174,9 @@ export class FieldDetailsUI extends Component {
   }
 
   componentWillUnmount () {
-    this.fieldLayer.remove();
-    this.photoMarkers.forEach((m) => m.remove())
+    if(!this.preserveSelection) {
+      removeMapSelection()
+    }
   }
 
   render() {
@@ -183,7 +187,7 @@ export class FieldDetailsUI extends Component {
     const { name, square, suspiciousZone } = this.state.data;
 
     return (
-      <Card className="field-details-card" hasBackBtn hasCloseBtn>
+      <Card className="field-details-card" hasBackBtn hasCloseBtn onCloseClick={this.onCLoseButtonCLick}>
         <div className="text-center medium mb-15">{name}</div>
         <Row>
           <Col xs={6} className="pr-25">
