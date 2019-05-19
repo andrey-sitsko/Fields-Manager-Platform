@@ -388,7 +388,7 @@ module.exports.fields = async (event) => {
         data: images.map(img => JSON.parse(img.Body.toString())).map(v => ({
           id: v.id,
           name: v.name,
-          src: v.photos ? v.photos[0].src : null
+          src: v.photos ? v.photos[0] ? v.photos[0].src : null : null
         }))
       }),
     };
