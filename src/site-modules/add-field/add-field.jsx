@@ -48,15 +48,11 @@ export class AddFieldUI extends Component {
   createField = async () => {
     getMap().pm.toggleGlobalEditMode();
     this.activeShape.layer.remove();
-    // ToDO clarify api
-    // const fields = await axios.post('https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/fields')
     const payload = {
-      coordinates: this.activeShape.layer._latlngs,
+      fieldShape: this.activeShape.layer._latlngs[0],
       name: this.fieldNameRef.current.value
     }
-
     const {data: {data: {fieldId}}} = await axios.post('https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/field', payload);
-
     this.props.history.push(`/my-fields/field-details/${fieldId}`)
   }
 

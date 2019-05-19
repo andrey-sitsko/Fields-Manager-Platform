@@ -159,17 +159,19 @@ export class FieldDetailsUI extends Component {
 
       const map = getMap();
 
-      for (let photo of mock.photos) {
-        const marker = window.L.marker([photo.lat, photo.lng],{
-          icon: window.L.icon({
-            iconUrl: photo.dmz * 100 > 20 ? '/oval-red.svg' : '/oval-blue.svg'
+      if(this.fieldLayer.photos) {
+        for (let photo of this.fieldLayer.photos) {
+          const marker = window.L.marker([photo.lat, photo.lng],{
+            icon: window.L.icon({
+              iconUrl: photo.dmz * 100 > 20 ? '/oval-red.svg' : '/oval-blue.svg'
+            })
+          });
+          marker.on('click', () => {
+            this.preserveSelection = true;
+            this.props.history.push(`/my-fields/field-details/${this.props.match.params.fieldId}/photo-details/${photo.id}`)
           })
-        });
-        marker.on('click', () => {
-          this.preserveSelection = true;
-          this.props.history.push(`/my-fields/field-details/${this.props.match.params.fieldId}/photo-details/${photo.id}`)
-        })
-        marker.addTo(map)
+          marker.addTo(map)
+        }
       }
     }, 0)
   }
@@ -195,7 +197,7 @@ export class FieldDetailsUI extends Component {
             <div className="font-weight-bold large text-black mb-15">
               Common Info
               {!square && <Fragment>
-                  <i class="icon icon-help no-photo-toggle ml-1" />
+                  <i className="icon icon-help no-photo-toggle ml-1" />
                 <Card className="no-photo-tooltip medium font-weight-normal">
                   We don’t have photos of your field yet. But you can add them mannualy. JPG and PNG files are applicable.
                 </Card>
