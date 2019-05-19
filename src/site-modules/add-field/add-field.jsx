@@ -54,8 +54,10 @@ export class AddFieldUI extends Component {
       coordinates: this.activeShape.layer._latlngs,
       name: this.fieldNameRef.current.value
     }
-    console.log(JSON.stringify(payload))
-    this.props.history.push('/my-fields/field-details/1234')
+
+    const {data: {data: {fieldId}}} = await axios.post('https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/field', payload);
+
+    this.props.history.push(`/my-fields/field-details/${fieldId}`)
   }
 
   render() {

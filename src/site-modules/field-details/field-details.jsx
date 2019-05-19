@@ -122,8 +122,8 @@ export class FieldDetailsUI extends Component {
     match: PropTypes.shape({
       params: PropTypes.shape({
         fieldId: PropTypes.string.isRequired,
-      }),
-    }),
+      })
+    })
   };
 
   constructor(props) {
@@ -137,16 +137,17 @@ export class FieldDetailsUI extends Component {
   componentDidMount() {
     setTimeout(async () => {
       // ToDo add axios request
-      this.setState({ data: mock })
-      setLocation(mock.fieldShape[0].lat, mock.fieldShape[0].lng, 12)
+      const {data: {data: fieldDetails}} = await axios.get(`https://ejdqa39gf6.execute-api.us-east-1.amazonaws.com/dev/field/${this.props.match.params.fieldId}`)
+      this.setState({ data: fieldDetails })
+      setLocation(fieldDetails.fieldShape[0].lat, fieldDetails.fieldShape[0].lng, 12)
 
       this.fieldLayer = new window.L.FeatureGroup();
 
       getMap().addLayer(this.fieldLayer);
-      const polygon = window.L.polygon(mock.fieldShape.map(({lat, lng}) => [lat, lng]));
+      const polygon = window.L.polygon(fieldDetails.fieldShape.map(({lat, lng}) => [lat, lng]));
       this.fieldLayer.addLayer(polygon)
 
-      const {data: weather} = await axios.get(`https://api.openweathermap.org/data/2.5/weather?appid=29e93815caecbaae939c0f3c29cd57d9&units=metric&lon=${mock.fieldShape[0].lng}&lat=${mock.fieldShape[0].lat}`)
+      const {data: weather} = await axios.get(`https://api.openweathermap.org/data/2.5/weather?appid=29e93815caecbaae939c0f3c29cd57d9&units=metric&lon=${fieldDetails.fieldShape[0].lng}&lat=${fieldDetails.fieldShape[0].lat}`)
 
       this.setState({
         temperature: weather.main.temp,
@@ -194,11 +195,11 @@ export class FieldDetailsUI extends Component {
             <div className="font-weight-bold large text-black mb-15">Common Info</div>
             <div className="d-flex justify-content-between medium mb-10">
               <div className="text-gray">Square</div>
-              <div>{square}ha</div>
+              {!!square && <div>{square}ha</div>}
             </div>
             <div className="d-flex justify-content-between medium mb-30">
               <div className="text-gray">Suspicious zone</div>
-              <SuspiciousZoneValue percents={suspiciousZone} />
+              {!!suspiciousZone && <SuspiciousZoneValue percents={suspiciousZone} />}
             </div>
             <div className="font-weight-bold d-inline-block text-black large mb-15">Weather</div>
             <i className={classnames('icon float-right', {
